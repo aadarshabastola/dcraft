@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:dcraft/provider/drive_auth_provider.dart';
+import 'package:dcraft/screens/settings_page.dart';
 import 'package:dcraft/services/drive_storage_service.dart';
 import 'package:dcraft/widgets/sherd_details.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -9,6 +10,7 @@ import 'package:hive/hive.dart';
 
 import 'package:dcraft/widgets/classification_item.dart';
 import 'package:flutter/material.dart';
+import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
 
 class MyClassifications extends StatefulWidget {
@@ -278,7 +280,13 @@ class _MyClassificationsState extends State<MyClassifications> {
                       )
                     : FilledButton.icon(
                         icon: Icon(FontAwesomeIcons.googleDrive),
-                        onPressed: () => uploadToDrive(),
+                        onPressed: () {
+                          Navigator.push(
+                              context,
+                              PageTransition(
+                                  child: SettingsPage(),
+                                  type: PageTransitionType.fade));
+                        },
                         label: Text('Connect to Google Drive'),
                       ),
               ],

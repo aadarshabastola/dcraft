@@ -96,7 +96,7 @@ class _SettingsPageState extends State<SettingsPage> {
 
   @override
   Widget build(BuildContext context) {
-    final themeProvider = Provider.of<ThemeProvider>(context, listen: false);
+    final themeProvider = Provider.of<ThemeProvider>(context, listen: true);
 
     final authProvider =
         Provider.of<GoogleDriveAuthProvider>(context, listen: true);
@@ -201,15 +201,33 @@ class _SettingsPageState extends State<SettingsPage> {
                       items: const [
                         DropdownMenuItem(
                           value: ThemeMode.light,
-                          child: Text('Light'),
+                          child: Row(
+                            children: [
+                              Icon(Icons.light_mode, size: 18),
+                              SizedBox(width: 8),
+                              Text('Light'),
+                            ],
+                          ),
                         ),
                         DropdownMenuItem(
                           value: ThemeMode.dark,
-                          child: Text('Dark'),
+                          child: Row(
+                            children: [
+                              Icon(Icons.dark_mode, size: 18),
+                              SizedBox(width: 8),
+                              Text('Dark'),
+                            ],
+                          ),
                         ),
                         DropdownMenuItem(
                           value: ThemeMode.system,
-                          child: Text('System'),
+                          child: Row(
+                            children: [
+                              Icon(Icons.settings, size: 18),
+                              SizedBox(width: 8),
+                              Text('System'),
+                            ],
+                          ),
                         ),
                       ],
                       onChanged: (ThemeMode? newThemeMode) {
@@ -224,6 +242,9 @@ class _SettingsPageState extends State<SettingsPage> {
               TextButton(
                 onPressed: clearAppData,
                 child: const Text("Having Issues? Clear App Data?"),
+              ),
+              SizedBox(
+                height: 8,
               ),
               Center(
                 child: Column(
