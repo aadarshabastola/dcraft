@@ -1,6 +1,5 @@
 import 'dart:io';
 import 'dart:math';
-import 'dart:typed_data';
 import 'package:dcraft/screens/about/about_tww.dart';
 import 'package:dcraft/screens/edit_results.dart';
 import 'package:dcraft/screens/my_classificatoins.dart';
@@ -30,7 +29,6 @@ class _HomePageState extends State<HomePage> {
   File? selectedImage;
   String? classificaitonData;
   Position? currentPosition;
-  img.Image? imageForModel;
 
   late Interpreter interpreter;
   List<String> labels = [
@@ -91,23 +89,20 @@ class _HomePageState extends State<HomePage> {
     // Copy the temporary file to permanent storage
     await File(croppedFile.path).copy(filePath);
 
+    // Convert the image to grayscale and resize to 400x400 pixels
+    final grayscaleImage = img.grayscale(
+        img.decodeImage(await File(croppedFile.path).readAsBytes())!);
+    final resizedGrayscaleImage =
+        img.copyResize(grayscaleImage, width: 400, height: 400);
+
+    // Save the processed image to the permanent storage
+    final processedImageFile = File(filePath);
+    await processedImageFile
+        .writeAsBytes(img.encodeJpg(resizedGrayscaleImage, quality: 50));
+
     setState(() {
       selectedImage = File(filePath);
     });
-
-    //convert croppedFile to grayscale
-    // Read the image file
-    final File imageFile = File(croppedFile.path);
-    final Uint8List imageBytes = await imageFile.readAsBytes();
-
-    // Decode the image using the image package
-    img.Image? image = img.decodeImage(Uint8List.fromList(imageBytes));
-
-    if (image == null) {
-      return;
-    }
-
-    imageForModel = image;
 
     classifyImage();
   }
