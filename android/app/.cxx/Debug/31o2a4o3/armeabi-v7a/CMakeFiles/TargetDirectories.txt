@@ -1,0 +1,2 @@
+C:/Users/Aadarsha/dcraft/android/app/.cxx/Debug/31o2a4o3/armeabi-v7a/CMakeFiles/edit_cache.dir
+C:/Users/Aadarsha/dcraft/android/app/.cxx/Debug/31o2a4o3/armeabi-v7a/CMakeFiles/rebuild_cache.dir
