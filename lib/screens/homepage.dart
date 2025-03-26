@@ -644,9 +644,6 @@ class _HomePageState extends State<HomePage> {
                             padding: const EdgeInsets.all(12.0),
                             child: Column(
                               children: [
-                                const Text('Primary Classification:',
-                                    style:
-                                        TextStyle(fontWeight: FontWeight.bold)),
                                 Text(
                                   "${classificatoinMap!['primaryClassification'].toString()} [${classificatoinMap!['allClassifications']?[classificatoinMap!['primaryClassification']]?.toStringAsFixed(3) ?? "0.0"}]",
                                   style: const TextStyle(
@@ -659,10 +656,21 @@ class _HomePageState extends State<HomePage> {
                                 ),
                                 ...classificatoinMap!['allClassifications']
                                     .entries
+                                    .where((entry) =>
+                                        (entry as MapEntry<String, double>)
+                                            .value >
+                                        0.10)
                                     .map((entry) => Text(
                                         '${entry.key}: ${entry.value.toStringAsFixed(3)}')),
+                                SizedBox(height: 8),
+                                const Text(
+                                  'Approximate Location',
+                                  style: TextStyle(fontWeight: FontWeight.bold),
+                                ),
                                 Text(
-                                    "Location: ${classificatoinMap!['latitude'].toStringAsFixed(4)}, ${classificatoinMap!['longitude'].toStringAsFixed(4)}"),
+                                    "Latitude: ${classificatoinMap!['latitude'].toStringAsFixed(4)}"),
+                                Text(
+                                    "Longitude: ${classificatoinMap!['longitude'].toStringAsFixed(4)}"),
                               ],
                             )),
                       )

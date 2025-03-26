@@ -3,6 +3,7 @@ import 'package:dcraft/provider/theme_provider.dart';
 import 'package:dcraft/screens/about/about_craft.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -62,6 +63,35 @@ class _SettingsPageState extends State<SettingsPage> {
       },
     );
     return;
+  }
+
+  void clearAppData() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Clear App Data?'),
+          content: const Text(
+              'Are you sure you want to clear all classification data? This action cannot be undone.'),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () {
+                Hive.box('classificationBox').clear();
+                Navigator.pop(context);
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('App data cleared')),
+                );
+              },
+              child: const Text('Clear', style: TextStyle(color: Colors.red)),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
@@ -190,6 +220,10 @@ class _SettingsPageState extends State<SettingsPage> {
                     ),
                   ),
                 ],
+              ),
+              TextButton(
+                onPressed: clearAppData,
+                child: const Text("Having Issues? Clear App Data?"),
               ),
               Center(
                 child: Column(

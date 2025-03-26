@@ -80,7 +80,9 @@ class ClassificationItem extends StatelessWidget {
               IconButton(onPressed: onDelete, icon: Icon(Icons.delete))
             ],
           ),
-          const Divider(),
+          SizedBox(
+            height: 16,
+          ),
         ],
       ),
     );

@@ -211,6 +211,9 @@ class _MyClassificationsState extends State<MyClassifications> {
 
   @override
   Widget build(BuildContext context) {
+    final authProvider =
+        Provider.of<GoogleDriveAuthProvider>(context, listen: false);
+
     return DefaultTabController(
       length: 2,
       child: SafeArea(
@@ -267,16 +270,17 @@ class _MyClassificationsState extends State<MyClassifications> {
                           },
                         ),
                 ),
-                FilledButton.icon(
-                    icon: Icon(FontAwesomeIcons.googleDrive),
-                    onPressed: () => uploadToDrive(),
-                    label: Text('Upload to Drive')),
-                FilledButton(
-                  onPressed: () async {
-                    print(classificationHistory[0]);
-                  },
-                  child: Text('Print'),
-                )
+                authProvider.authService.isSignedIn
+                    ? FilledButton.icon(
+                        icon: Icon(FontAwesomeIcons.googleDrive),
+                        onPressed: () => uploadToDrive(),
+                        label: Text('Upload to Google Drive'),
+                      )
+                    : FilledButton.icon(
+                        icon: Icon(FontAwesomeIcons.googleDrive),
+                        onPressed: () => uploadToDrive(),
+                        label: Text('Connect to Google Drive'),
+                      ),
               ],
             ),
           ),
