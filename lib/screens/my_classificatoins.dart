@@ -143,7 +143,20 @@ class _MyClassificationsState extends State<MyClassifications> {
       }
 
       var box = Hive.box('classificationBox');
+      // Delete images from their respective paths
+      for (var classification in classificationHistory) {
+        String imagePath = classification['imageLocation'];
+        final imageFile = File(imagePath);
+        if (await imageFile.exists()) {
+          await imageFile.delete();
+        }
+      }
+
       await box.clear(); // Clear all data in the Hive box
+
+      setState(() {
+        classificationHistory.clear();
+      });
 
       _showMessage('Data uploaded to Drive successfully.');
     } catch (e) {
@@ -245,7 +258,9 @@ class _MyClassificationsState extends State<MyClassifications> {
               children: [
                 Expanded(
                   child: classificationHistory.isEmpty
-                      ? const Center(child: Text('No history found.'))
+                      ? const Center(
+                          child: Text(
+                              'There is no saved data in your device currently.'))
                       : ListView.builder(
                           itemCount: classificationHistory.length,
                           itemBuilder: (context, index) {
