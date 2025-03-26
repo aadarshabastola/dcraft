@@ -76,6 +76,10 @@ class _MyClassificationsState extends State<MyClassifications> {
   }
 
   void uploadToDrive() async {
+    if (classificationHistory.isEmpty) {
+      _showMessage('There is nothing to upload', 'Error');
+    }
+
     final driveApi =
         Provider.of<GoogleDriveAuthProvider>(context, listen: false).driveApi;
     if (driveApi == null) {
@@ -290,23 +294,25 @@ class _MyClassificationsState extends State<MyClassifications> {
                           },
                         ),
                 ),
-                authProvider.authService.isSignedIn
-                    ? FilledButton.icon(
-                        icon: Icon(FontAwesomeIcons.googleDrive),
-                        onPressed: () => uploadToDrive(),
-                        label: Text('Upload to Google Drive'),
-                      )
-                    : FilledButton.icon(
-                        icon: Icon(FontAwesomeIcons.googleDrive),
-                        onPressed: () {
-                          Navigator.push(
-                              context,
-                              PageTransition(
-                                  child: SettingsPage(),
-                                  type: PageTransitionType.fade));
-                        },
-                        label: Text('Connect to Google Drive'),
-                      ),
+                classificationHistory.isNotEmpty
+                    ? authProvider.authService.isSignedIn
+                        ? FilledButton.icon(
+                            icon: Icon(FontAwesomeIcons.googleDrive),
+                            onPressed: () => uploadToDrive(),
+                            label: Text('Upload to Google Drive'),
+                          )
+                        : FilledButton.icon(
+                            icon: Icon(FontAwesomeIcons.googleDrive),
+                            onPressed: () {
+                              Navigator.push(
+                                  context,
+                                  PageTransition(
+                                      child: SettingsPage(),
+                                      type: PageTransitionType.fade));
+                            },
+                            label: Text('Connect to Google Drive'),
+                          )
+                    : Container(),
               ],
             ),
           ),

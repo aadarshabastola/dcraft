@@ -151,6 +151,8 @@ class _HomePageState extends State<HomePage> {
   void classifyImage() async {
     Position pos = await _determinePosition();
 
+    debugPrint('Position Done');
+
     //randomize the position by 500 meters
     pos = randomizePosition(pos, 500);
 
@@ -182,6 +184,8 @@ class _HomePageState extends State<HomePage> {
       }
     }
 
+    debugPrint('PreProcessing Done');
+
 // Run the model inference
     final outputBuffer =
         List.generate(1, (_) => List.filled(_outputShape[1], 0.0));
@@ -205,6 +209,8 @@ class _HomePageState extends State<HomePage> {
         highestConfidenceLabel = label;
       }
     });
+
+    debugPrint('Classification Done');
 
     setState(() {
       classificatoinMap = {
