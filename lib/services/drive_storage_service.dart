@@ -78,6 +78,7 @@ class DriveStorageService {
       'Dogoszhi',
       'Flagstaff',
       'Kayenta',
+      'Tusayan',
       'Latitude',
       'Longitude',
       'Timestamp'
@@ -125,6 +126,7 @@ class DriveStorageService {
       data['Dogoszhi'],
       data['Flagstaff'],
       data['Kayenta'],
+      data['Tusayan'],
       data['Latitude'],
       data['Longitude'],
       data['Timestamp'],

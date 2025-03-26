@@ -106,7 +106,7 @@ class _MyClassificationsState extends State<MyClassifications> {
                   children: [
                     const CircularProgressIndicator(),
                     const SizedBox(height: 16),
-                    Text('Uploading to Drive...'),
+                    Text('Initializing Google Drive Instance...'),
                   ],
                 ),
               );
@@ -230,7 +230,7 @@ class _MyClassificationsState extends State<MyClassifications> {
   @override
   Widget build(BuildContext context) {
     final authProvider =
-        Provider.of<GoogleDriveAuthProvider>(context, listen: false);
+        Provider.of<GoogleDriveAuthProvider>(context, listen: true);
 
     return DefaultTabController(
       length: 2,
