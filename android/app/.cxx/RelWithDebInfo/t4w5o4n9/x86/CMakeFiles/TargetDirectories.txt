@@ -1,0 +1,2 @@
+C:/Users/Aadarsha/dcraft/android/app/.cxx/RelWithDebInfo/t4w5o4n9/x86/CMakeFiles/edit_cache.dir
+C:/Users/Aadarsha/dcraft/android/app/.cxx/RelWithDebInfo/t4w5o4n9/x86/CMakeFiles/rebuild_cache.dir

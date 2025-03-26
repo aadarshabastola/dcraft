@@ -241,7 +241,7 @@ class _SettingsPageState extends State<SettingsPage> {
               ),
               TextButton(
                 onPressed: clearAppData,
-                child: const Text("Having Issues? Clear App Data?"),
+                child: const Text("Having Issues? Clear App Data"),
               ),
               SizedBox(
                 height: 8,
