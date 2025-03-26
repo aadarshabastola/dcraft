@@ -142,6 +142,9 @@ class _MyClassificationsState extends State<MyClassifications> {
         }
       }
 
+      var box = Hive.box('classificationBox');
+      await box.clear(); // Clear all data in the Hive box
+
       _showMessage('Data uploaded to Drive successfully.');
     } catch (e) {
       Navigator.of(context, rootNavigator: true)
