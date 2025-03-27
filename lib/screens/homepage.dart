@@ -14,6 +14,7 @@ import 'package:page_transition/page_transition.dart';
 
 import 'package:image/image.dart' as img;
 import 'package:path_provider/path_provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tflite_flutter/tflite_flutter.dart';
 
 class HomePage extends StatefulWidget {
@@ -50,6 +51,15 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
     loadModel();
+    getSiteId();
+  }
+
+  Future<void> getSiteId() async {
+    final prefs = await SharedPreferences.getInstance();
+    final siteId = prefs.getString('siteId') ?? '';
+    setState(() {
+      siteIdController.text = siteId;
+    });
   }
 
   Future<void> loadModel() async {
@@ -151,12 +161,11 @@ class _HomePageState extends State<HomePage> {
   }
 
   void classifyImage() async {
-    Position pos = await _determinePosition();
-
-    debugPrint('Position Done');
-
+    if (currentPosition == null) {
+      currentPosition = await _determinePosition();
+    }
     //randomize the position by 500 meters
-    pos = randomizePosition(pos, 500);
+    Position pos = randomizePosition(currentPosition!, 500);
 
     const inputSize = 224;
     // Resize the image
@@ -185,8 +194,6 @@ class _HomePageState extends State<HomePage> {
         input[0][y][x][2] = img.getBlue(pixel).toDouble();
       }
     }
-
-    debugPrint('PreProcessing Done');
 
 // Run the model inference
     final outputBuffer =
@@ -265,7 +272,7 @@ class _HomePageState extends State<HomePage> {
     // continue accessing the position of the device.
     return await Geolocator.getCurrentPosition(
       locationSettings: const LocationSettings(
-        accuracy: LocationAccuracy.low,
+        accuracy: LocationAccuracy.high,
         distanceFilter: 50,
       ),
     );
@@ -288,6 +295,10 @@ class _HomePageState extends State<HomePage> {
     classificatoinMap!['latitude'] = currentPosition!.latitude;
     classificatoinMap!['longitude'] = currentPosition!.longitude;
     classificatoinMap!['siteId'] = siteIdController.text;
+
+    // Save the site ID to shared preferences
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('siteId', siteIdController.text);
 
     try {
       // Save the classification data locally to Hive
@@ -336,209 +347,69 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return PopScope(
-      canPop: false,
-      child: Scaffold(
-        appBar: AppBar(
-          automaticallyImplyLeading: false,
-          toolbarHeight: 80,
-          title: const FittedBox(
-            fit: BoxFit.scaleDown,
-            child: Padding(
-              padding: EdgeInsets.all(8.0),
-              child: Text(
-                'dCRAFT',
-                style: TextStyle(
-                    fontFamily: 'Uber',
-                    fontSize: 60,
-                    fontWeight: FontWeight.w700),
+    return GestureDetector(
+      onTap: () => FocusScope.of(context).unfocus(),
+      child: PopScope(
+        canPop: false,
+        child: Scaffold(
+          appBar: AppBar(
+            automaticallyImplyLeading: false,
+            toolbarHeight: 80,
+            title: const FittedBox(
+              fit: BoxFit.scaleDown,
+              child: Padding(
+                padding: EdgeInsets.all(8.0),
+                child: Text(
+                  'dCRAFT',
+                  style: TextStyle(
+                      fontFamily: 'Uber',
+                      fontSize: 60,
+                      fontWeight: FontWeight.w700),
+                ),
               ),
             ),
           ),
-        ),
-        body: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                selectedImage == null
-                    ? Column(
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              Expanded(
-                                child: GestureDetector(
-                                  onTap: () =>
-                                      pickAndCropImage(ImageSource.camera),
-                                  child: Container(
-                                    height:
-                                        MediaQuery.of(context).size.width / 3,
-                                    decoration: BoxDecoration(
-                                        color: Theme.of(context)
-                                            .colorScheme
-                                            .primary, // select color from current theme scheme
-                                        borderRadius: const BorderRadius.all(
-                                            Radius.circular(5))),
-                                    child: Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 40, vertical: 8),
-                                      child: Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          Icon(
-                                            Icons.camera_alt_rounded,
-                                            size: 80,
-                                            color: Theme.of(context)
-                                                .colorScheme
-                                                .onPrimary,
-                                          ),
-                                          Text(
-                                            'CAMERA',
-                                            style: TextStyle(
-                                              fontSize: 15,
-                                              fontFamily: 'Uber',
-                                              fontWeight: FontWeight.w900,
+          body: SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  selectedImage == null
+                      ? Column(
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                Expanded(
+                                  child: GestureDetector(
+                                    onTap: () =>
+                                        pickAndCropImage(ImageSource.camera),
+                                    child: Container(
+                                      height:
+                                          MediaQuery.of(context).size.width / 3,
+                                      decoration: BoxDecoration(
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .primary, // select color from current theme scheme
+                                          borderRadius: const BorderRadius.all(
+                                              Radius.circular(5))),
+                                      child: Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 40, vertical: 8),
+                                        child: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            Icon(
+                                              Icons.camera_alt_rounded,
+                                              size: 80,
                                               color: Theme.of(context)
                                                   .colorScheme
                                                   .onPrimary,
                                             ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              const SizedBox(width: 16),
-                              Expanded(
-                                child: GestureDetector(
-                                  onTap: () =>
-                                      pickAndCropImage(ImageSource.gallery),
-                                  child: Container(
-                                    width:
-                                        MediaQuery.of(context).size.width / 2.3,
-                                    height:
-                                        MediaQuery.of(context).size.width / 3,
-                                    decoration: BoxDecoration(
-                                        color: Theme.of(context)
-                                            .colorScheme
-                                            .primary, // select color from current theme scheme
-                                        borderRadius: const BorderRadius.all(
-                                            Radius.circular(5))),
-                                    child: Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 40, vertical: 8),
-                                      child: Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          Icon(
-                                            Icons.image_rounded,
-                                            size: 80,
-                                            color: Theme.of(context)
-                                                .colorScheme
-                                                .onPrimary,
-                                          ),
-                                          Text(
-                                            'GALLERY',
-                                            style: TextStyle(
-                                              fontSize: 15,
-                                              fontFamily: 'Uber',
-                                              fontWeight: FontWeight.w900,
-                                              color: Theme.of(context)
-                                                  .colorScheme
-                                                  .onPrimary,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: 16),
-                          GestureDetector(
-                            onTap: () => Navigator.push(
-                                context,
-                                PageTransition(
-                                    child: const MyClassifications(),
-                                    type: PageTransitionType.fade)),
-                            child: Container(
-                              width: MediaQuery.of(context).size.width,
-                              height: MediaQuery.of(context).size.width / 3,
-                              decoration: BoxDecoration(
-                                  color: Theme.of(context)
-                                      .colorScheme
-                                      .primary, // select color from current theme scheme
-                                  borderRadius: const BorderRadius.all(
-                                      Radius.circular(5))),
-                              child: Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 40, vertical: 8),
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Icon(
-                                      Icons.history_rounded,
-                                      size: 80,
-                                      color: Theme.of(context)
-                                          .colorScheme
-                                          .onPrimary,
-                                    ),
-                                    Text(
-                                      'CLASSIFICATION HISTORY',
-                                      style: TextStyle(
-                                        fontSize: 15,
-                                        fontFamily: 'Uber',
-                                        fontWeight: FontWeight.w900,
-                                        color: Theme.of(context)
-                                            .colorScheme
-                                            .onPrimary,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ),
-                          const SizedBox(height: 16),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Expanded(
-                                child: GestureDetector(
-                                  onTap: () {
-                                    Navigator.push(
-                                        context,
-                                        PageTransition(
-                                            child: const AboutTww(),
-                                            type: PageTransitionType.fade));
-                                  },
-                                  child: Container(
-                                    height:
-                                        MediaQuery.of(context).size.width / 3,
-                                    decoration: BoxDecoration(
-                                        color: Theme.of(context)
-                                            .colorScheme
-                                            .primary, // select color from current theme scheme
-                                        borderRadius: const BorderRadius.all(
-                                            Radius.circular(5))),
-                                    child: Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 40, vertical: 8),
-                                      child: Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          FittedBox(
-                                            fit: BoxFit.contain,
-                                            child: Text(
-                                              'ABOUT\nTUSAYAN\nWHITE\nWARE',
+                                            Text(
+                                              'CAMERA',
                                               style: TextStyle(
                                                 fontSize: 15,
                                                 fontFamily: 'Uber',
@@ -548,112 +419,215 @@ class _HomePageState extends State<HomePage> {
                                                     .onPrimary,
                                               ),
                                             ),
-                                          ),
-                                        ],
+                                          ],
+                                        ),
                                       ),
                                     ),
                                   ),
                                 ),
-                              ),
-                              const SizedBox(width: 16),
-                              Expanded(
-                                child: GestureDetector(
-                                  onTap: () {
-                                    Navigator.push(
-                                        context,
-                                        PageTransition(
-                                            child: SettingsPage(),
-                                            type: PageTransitionType.fade));
-                                  },
-                                  child: Container(
-                                    // width: MediaQuery.of(context).size.width / 2.3,
-                                    height:
-                                        MediaQuery.of(context).size.width / 3,
-                                    decoration: BoxDecoration(
-                                        color: Theme.of(context)
-                                            .colorScheme
-                                            .primary, // select color from current theme scheme
-                                        borderRadius: const BorderRadius.all(
-                                            Radius.circular(5))),
-                                    child: Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 40, vertical: 8),
-                                      child: Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          Icon(
-                                            Icons.settings_rounded,
-                                            size: 80,
-                                            color: Theme.of(context)
-                                                .colorScheme
-                                                .onPrimary,
-                                          ),
-                                          Text(
-                                            "SETTINGS",
-                                            style: TextStyle(
-                                              fontSize: 15,
-                                              fontFamily: 'Uber',
-                                              fontWeight: FontWeight.w900,
+                                const SizedBox(width: 16),
+                                Expanded(
+                                  child: GestureDetector(
+                                    onTap: () =>
+                                        pickAndCropImage(ImageSource.gallery),
+                                    child: Container(
+                                      width: MediaQuery.of(context).size.width /
+                                          2.3,
+                                      height:
+                                          MediaQuery.of(context).size.width / 3,
+                                      decoration: BoxDecoration(
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .primary, // select color from current theme scheme
+                                          borderRadius: const BorderRadius.all(
+                                              Radius.circular(5))),
+                                      child: Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 40, vertical: 8),
+                                        child: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            Icon(
+                                              Icons.image_rounded,
+                                              size: 80,
                                               color: Theme.of(context)
                                                   .colorScheme
                                                   .onPrimary,
                                             ),
-                                          )
-                                        ],
+                                            Text(
+                                              'GALLERY',
+                                              style: TextStyle(
+                                                fontSize: 15,
+                                                fontFamily: 'Uber',
+                                                fontWeight: FontWeight.w900,
+                                                color: Theme.of(context)
+                                                    .colorScheme
+                                                    .onPrimary,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
                                       ),
                                     ),
                                   ),
                                 ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      )
-                    : Container(),
-                selectedImage != null
-                    ? AspectRatio(
-                        aspectRatio: 1,
-                        child: Container(
-                          decoration: BoxDecoration(
-                              color: Theme.of(context)
-                                  .colorScheme
-                                  .secondaryContainer, // select color from current theme scheme
-                              borderRadius:
-                                  const BorderRadius.all(Radius.circular(5))),
-                          width: MediaQuery.of(context).size.width,
-                          // height: 100,
-                          child: Center(
-                              child: selectedImage != null
-                                  ? ClipRRect(
-                                      borderRadius: BorderRadius.circular(5),
-                                      child: Image.file(
-                                        selectedImage!,
-                                        fit: BoxFit.cover,
-                                        width:
-                                            MediaQuery.of(context).size.width,
-                                      ))
-                                  : Container()),
-                        ),
-                      )
-                    : Container(),
-                const SizedBox(
-                  height: 30,
-                ),
-                classificaitonData != null
-                    ? Column(
-                        children: [
-                          TextField(
-                            controller: siteIdController,
-                            decoration: InputDecoration(
-                              labelText: 'Site ID',
-                              border: OutlineInputBorder(),
+                              ],
                             ),
-                          ),
-                          SizedBox(
-                            height: 16,
-                          ),
-                          Container(
+                            const SizedBox(height: 16),
+                            GestureDetector(
+                              onTap: () => Navigator.push(
+                                  context,
+                                  PageTransition(
+                                      child: const MyClassifications(),
+                                      type: PageTransitionType.fade)),
+                              child: Container(
+                                width: MediaQuery.of(context).size.width,
+                                height: MediaQuery.of(context).size.width / 3,
+                                decoration: BoxDecoration(
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .primary, // select color from current theme scheme
+                                    borderRadius: const BorderRadius.all(
+                                        Radius.circular(5))),
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 40, vertical: 8),
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Icon(
+                                        Icons.history_rounded,
+                                        size: 80,
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .onPrimary,
+                                      ),
+                                      Text(
+                                        'CLASSIFICATION HISTORY',
+                                        style: TextStyle(
+                                          fontSize: 15,
+                                          fontFamily: 'Uber',
+                                          fontWeight: FontWeight.w900,
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .onPrimary,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ),
+                            const SizedBox(height: 16),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Expanded(
+                                  child: GestureDetector(
+                                    onTap: () {
+                                      Navigator.push(
+                                          context,
+                                          PageTransition(
+                                              child: const AboutTww(),
+                                              type: PageTransitionType.fade));
+                                    },
+                                    child: Container(
+                                      height:
+                                          MediaQuery.of(context).size.width / 3,
+                                      decoration: BoxDecoration(
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .primary, // select color from current theme scheme
+                                          borderRadius: const BorderRadius.all(
+                                              Radius.circular(5))),
+                                      child: Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 40, vertical: 8),
+                                        child: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            FittedBox(
+                                              fit: BoxFit.contain,
+                                              child: Text(
+                                                'ABOUT\nTUSAYAN\nWHITE\nWARE',
+                                                style: TextStyle(
+                                                  fontSize: 15,
+                                                  fontFamily: 'Uber',
+                                                  fontWeight: FontWeight.w900,
+                                                  color: Theme.of(context)
+                                                      .colorScheme
+                                                      .onPrimary,
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                const SizedBox(width: 16),
+                                Expanded(
+                                  child: GestureDetector(
+                                    onTap: () {
+                                      Navigator.push(
+                                          context,
+                                          PageTransition(
+                                              child: SettingsPage(),
+                                              type: PageTransitionType.fade));
+                                    },
+                                    child: Container(
+                                      // width: MediaQuery.of(context).size.width / 2.3,
+                                      height:
+                                          MediaQuery.of(context).size.width / 3,
+                                      decoration: BoxDecoration(
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .primary, // select color from current theme scheme
+                                          borderRadius: const BorderRadius.all(
+                                              Radius.circular(5))),
+                                      child: Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 40, vertical: 8),
+                                        child: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            Icon(
+                                              Icons.settings_rounded,
+                                              size: 80,
+                                              color: Theme.of(context)
+                                                  .colorScheme
+                                                  .onPrimary,
+                                            ),
+                                            Text(
+                                              "SETTINGS",
+                                              style: TextStyle(
+                                                fontSize: 15,
+                                                fontFamily: 'Uber',
+                                                fontWeight: FontWeight.w900,
+                                                color: Theme.of(context)
+                                                    .colorScheme
+                                                    .onPrimary,
+                                              ),
+                                            )
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        )
+                      : Container(),
+                  selectedImage != null
+                      ? AspectRatio(
+                          aspectRatio: 1,
+                          child: Container(
                             decoration: BoxDecoration(
                                 color: Theme.of(context)
                                     .colorScheme
@@ -661,114 +635,156 @@ class _HomePageState extends State<HomePage> {
                                 borderRadius:
                                     const BorderRadius.all(Radius.circular(5))),
                             width: MediaQuery.of(context).size.width,
-                            child: Padding(
-                                padding: const EdgeInsets.all(12.0),
-                                child: Column(
-                                  children: [
-                                    Text(
-                                      "${classificatoinMap!['primaryClassification'].toString()} [${classificatoinMap!['allClassifications']?[classificatoinMap!['primaryClassification']]?.toStringAsFixed(3) ?? "0.0"}]",
-                                      style: const TextStyle(
-                                          fontSize: 20,
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                    const Text(
-                                      'Model Prediction:',
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                    ...classificatoinMap!['allClassifications']
-                                        .entries
-                                        .where((entry) =>
-                                            (entry as MapEntry<String, double>)
-                                                .value >
-                                            0.10)
-                                        .map((entry) => Text(
-                                            '${entry.key}: ${entry.value.toStringAsFixed(3)}')),
-                                    SizedBox(height: 8),
-                                    const Text(
-                                      'Approximate Location',
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                    Text(
-                                        "Latitude: ${classificatoinMap!['latitude'].toStringAsFixed(4)}"),
-                                    Text(
-                                        "Longitude: ${classificatoinMap!['longitude'].toStringAsFixed(4)}"),
-                                  ],
-                                )),
+                            // height: 100,
+                            child: Center(
+                                child: selectedImage != null
+                                    ? ClipRRect(
+                                        borderRadius: BorderRadius.circular(5),
+                                        child: Image.file(
+                                          selectedImage!,
+                                          fit: BoxFit.cover,
+                                          width:
+                                              MediaQuery.of(context).size.width,
+                                        ))
+                                    : Container()),
                           ),
-                        ],
-                      )
-                    : Container(),
-                const SizedBox(
-                  height: 16,
-                ),
-                selectedImage != null && classificaitonData == null
-                    // ? Center(
-                    //     child: FilledButton(
-                    //         onPressed: classifyImage,
-                    //         child: const Text('Classify')),
-                    //   )
-                    ? const Center(
-                        child: CircularProgressIndicator(),
-                      )
-                    : Container(),
-                selectedImage != null && classificaitonData == null
-                    ? Center(
-                        child: TextButton(
-                            onPressed: resetScreen,
-                            child: const Text('Clear Image')),
-                      )
-                    : Container(),
-                selectedImage != null && classificaitonData != null
-                    ? Center(
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        )
+                      : Container(),
+                  const SizedBox(
+                    height: 30,
+                  ),
+                  classificaitonData != null
+                      ? Column(
                           children: [
-                            FilledButton(
-                                onPressed: saveClassificationLocally,
-                                child: const Text('Save Classification')),
-                            FilledButton(
-                                onPressed: () {
-                                  Navigator.push(
-                                      context,
-                                      PageTransition(
-                                          child: const AboutTww(),
-                                          type: PageTransitionType.fade));
-                                },
-                                child: const Text('TWW About')),
+                            TextField(
+                              controller: siteIdController,
+                              decoration: InputDecoration(
+                                labelText: 'Site ID',
+                                border: OutlineInputBorder(),
+                              ),
+                            ),
+                            SizedBox(
+                              height: 16,
+                            ),
+                            Container(
+                              decoration: BoxDecoration(
+                                  color: Theme.of(context)
+                                      .colorScheme
+                                      .secondaryContainer, // select color from current theme scheme
+                                  borderRadius: const BorderRadius.all(
+                                      Radius.circular(5))),
+                              width: MediaQuery.of(context).size.width,
+                              child: Padding(
+                                  padding: const EdgeInsets.all(12.0),
+                                  child: Column(
+                                    children: [
+                                      Text(
+                                        "${classificatoinMap!['primaryClassification'].toString()} [${classificatoinMap!['allClassifications']?[classificatoinMap!['primaryClassification']]?.toStringAsFixed(3) ?? "0.0"}]",
+                                        style: const TextStyle(
+                                            fontSize: 20,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                      const Text(
+                                        'Model Prediction:',
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                      ...classificatoinMap![
+                                              'allClassifications']
+                                          .entries
+                                          .where((entry) =>
+                                              (entry as MapEntry<String,
+                                                      double>)
+                                                  .value >
+                                              0.10)
+                                          .map((entry) => Text(
+                                              '${entry.key}: ${entry.value.toStringAsFixed(3)}')),
+                                      // SizedBox(height: 8),
+                                      // const Text(
+                                      //   'Approximate Location',
+                                      //   style: TextStyle(
+                                      //       fontWeight: FontWeight.bold),
+                                      // ),
+                                      // Text(
+                                      //     "Latitude: ${classificatoinMap!['latitude'].toStringAsFixed(4)}"),
+                                      // Text(
+                                      //     "Longitude: ${classificatoinMap!['longitude'].toStringAsFixed(4)}"),
+                                    ],
+                                  )),
+                            ),
                           ],
-                        ),
-                      )
-                    : Container(),
+                        )
+                      : Container(),
+                  const SizedBox(
+                    height: 16,
+                  ),
+                  selectedImage != null && classificaitonData == null
+                      // ? Center(
+                      //     child: FilledButton(
+                      //         onPressed: classifyImage,
+                      //         child: const Text('Classify')),
+                      //   )
+                      ? const Center(
+                          child: CircularProgressIndicator(),
+                        )
+                      : Container(),
+                  selectedImage != null && classificaitonData == null
+                      ? Center(
+                          child: TextButton(
+                              onPressed: resetScreen,
+                              child: const Text('Clear Image')),
+                        )
+                      : Container(),
+                  selectedImage != null && classificaitonData != null
+                      ? Center(
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              FilledButton(
+                                  onPressed: saveClassificationLocally,
+                                  child: const Text('Save Classification')),
+                              FilledButton(
+                                  onPressed: () {
+                                    Navigator.push(
+                                        context,
+                                        PageTransition(
+                                            child: const AboutTww(),
+                                            type: PageTransitionType.fade));
+                                  },
+                                  child: const Text('TWW About')),
+                            ],
+                          ),
+                        )
+                      : Container(),
 
-                selectedImage != null && classificaitonData != null
-                    ? Center(
-                        child: TextButton(
-                            onPressed: resetScreen,
-                            child:
-                                const Text('Clear Image and Classification')),
-                      )
-                    : Container(),
-                selectedImage != null && classificaitonData != null
-                    ? Center(
-                        child: TextButton(
-                            onPressed: editClassification,
-                            child: const Text('Edit Classification')),
-                      )
-                    : Container(),
+                  selectedImage != null && classificaitonData != null
+                      ? Center(
+                          child: TextButton(
+                              onPressed: resetScreen,
+                              child:
+                                  const Text('Clear Image and Classification')),
+                        )
+                      : Container(),
+                  selectedImage != null && classificaitonData != null
+                      ? Center(
+                          child: TextButton(
+                              onPressed: editClassification,
+                              child: const Text('Edit Classification')),
+                        )
+                      : Container(),
 
-                // for testing purposes
-                // Center(
-                //   child: FilledButton(
-                //       onPressed: () {
-                //         var box = Hive.box('classificationBox');
+                  // for testing purposes
+                  // Center(
+                  //   child: FilledButton(
+                  //       onPressed: () {
+                  //         var box = Hive.box('classificationBox');
 
-                //         box.clear();
-                //       },
-                //       child: const Text('Clear Local Storage')),
-                // ),
-              ],
+                  //         box.clear();
+                  //       },
+                  //       child: const Text('Clear Local Storage')),
+                  // ),
+                ],
+              ),
             ),
           ),
         ),

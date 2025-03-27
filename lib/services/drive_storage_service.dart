@@ -101,8 +101,6 @@ class DriveStorageService {
   }
 
   Future<void> appendToCsv(Map<String, dynamic> data) async {
-    print(data);
-
     final craftFolderId = await _findOrCreateFolder(_craftFolderName);
     if (craftFolderId == null) throw Exception('CRAFT folder not found');
 
