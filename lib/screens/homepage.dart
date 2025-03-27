@@ -105,12 +105,12 @@ class _HomePageState extends State<HomePage> {
     final grayscaleImage = img.grayscale(
         img.decodeImage(await File(croppedFile.path).readAsBytes())!);
     final resizedGrayscaleImage =
-        img.copyResize(grayscaleImage, width: 400, height: 400);
+        img.copyResize(grayscaleImage, width: 800, height: 800);
 
     // Save the processed image to the permanent storage
     final processedImageFile = File(filePath);
     await processedImageFile
-        .writeAsBytes(img.encodeJpg(resizedGrayscaleImage, quality: 50));
+        .writeAsBytes(img.encodeJpg(resizedGrayscaleImage, quality: 70));
 
     setState(() {
       selectedImage = File(filePath);
