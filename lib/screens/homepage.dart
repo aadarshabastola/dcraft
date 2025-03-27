@@ -30,6 +30,8 @@ class _HomePageState extends State<HomePage> {
   String? classificaitonData;
   Position? currentPosition;
 
+  final TextEditingController siteIdController = TextEditingController();
+
   late Interpreter interpreter;
   List<String> labels = [
     "Kana'a",
@@ -271,6 +273,11 @@ class _HomePageState extends State<HomePage> {
 
   // Saving Data locally
   void saveClassificationLocally() async {
+    if (siteIdController.text.isEmpty) {
+      _showError('Site ID cannot be empty.');
+      return;
+    }
+
     // Open the Hive box for classifications
     var box = Hive.box('classificationBox');
     String imageLocation = selectedImage!.path;
@@ -280,6 +287,7 @@ class _HomePageState extends State<HomePage> {
     classificatoinMap!['imageLocation'] = imageLocation;
     classificatoinMap!['latitude'] = currentPosition!.latitude;
     classificatoinMap!['longitude'] = currentPosition!.longitude;
+    classificatoinMap!['siteId'] = siteIdController.text;
 
     try {
       // Save the classification data locally to Hive
@@ -633,47 +641,63 @@ class _HomePageState extends State<HomePage> {
                   height: 30,
                 ),
                 classificaitonData != null
-                    ? Container(
-                        decoration: BoxDecoration(
-                            color: Theme.of(context)
-                                .colorScheme
-                                .secondaryContainer, // select color from current theme scheme
-                            borderRadius:
-                                const BorderRadius.all(Radius.circular(5))),
-                        width: MediaQuery.of(context).size.width,
-                        child: Padding(
-                            padding: const EdgeInsets.all(12.0),
-                            child: Column(
-                              children: [
-                                Text(
-                                  "${classificatoinMap!['primaryClassification'].toString()} [${classificatoinMap!['allClassifications']?[classificatoinMap!['primaryClassification']]?.toStringAsFixed(3) ?? "0.0"}]",
-                                  style: const TextStyle(
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                                const Text(
-                                  'Model Prediction:',
-                                  style: TextStyle(fontWeight: FontWeight.bold),
-                                ),
-                                ...classificatoinMap!['allClassifications']
-                                    .entries
-                                    .where((entry) =>
-                                        (entry as MapEntry<String, double>)
-                                            .value >
-                                        0.10)
-                                    .map((entry) => Text(
-                                        '${entry.key}: ${entry.value.toStringAsFixed(3)}')),
-                                SizedBox(height: 8),
-                                const Text(
-                                  'Approximate Location',
-                                  style: TextStyle(fontWeight: FontWeight.bold),
-                                ),
-                                Text(
-                                    "Latitude: ${classificatoinMap!['latitude'].toStringAsFixed(4)}"),
-                                Text(
-                                    "Longitude: ${classificatoinMap!['longitude'].toStringAsFixed(4)}"),
-                              ],
-                            )),
+                    ? Column(
+                        children: [
+                          TextField(
+                            controller: siteIdController,
+                            decoration: InputDecoration(
+                              labelText: 'Site ID',
+                              border: OutlineInputBorder(),
+                            ),
+                          ),
+                          SizedBox(
+                            height: 16,
+                          ),
+                          Container(
+                            decoration: BoxDecoration(
+                                color: Theme.of(context)
+                                    .colorScheme
+                                    .secondaryContainer, // select color from current theme scheme
+                                borderRadius:
+                                    const BorderRadius.all(Radius.circular(5))),
+                            width: MediaQuery.of(context).size.width,
+                            child: Padding(
+                                padding: const EdgeInsets.all(12.0),
+                                child: Column(
+                                  children: [
+                                    Text(
+                                      "${classificatoinMap!['primaryClassification'].toString()} [${classificatoinMap!['allClassifications']?[classificatoinMap!['primaryClassification']]?.toStringAsFixed(3) ?? "0.0"}]",
+                                      style: const TextStyle(
+                                          fontSize: 20,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                    const Text(
+                                      'Model Prediction:',
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                    ...classificatoinMap!['allClassifications']
+                                        .entries
+                                        .where((entry) =>
+                                            (entry as MapEntry<String, double>)
+                                                .value >
+                                            0.10)
+                                        .map((entry) => Text(
+                                            '${entry.key}: ${entry.value.toStringAsFixed(3)}')),
+                                    SizedBox(height: 8),
+                                    const Text(
+                                      'Approximate Location',
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                    Text(
+                                        "Latitude: ${classificatoinMap!['latitude'].toStringAsFixed(4)}"),
+                                    Text(
+                                        "Longitude: ${classificatoinMap!['longitude'].toStringAsFixed(4)}"),
+                                  ],
+                                )),
+                          ),
+                        ],
                       )
                     : Container(),
                 const SizedBox(

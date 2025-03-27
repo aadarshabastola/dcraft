@@ -54,6 +54,8 @@ class _MyClassificationsState extends State<MyClassifications> {
     for (var entry in data) {
       Map<String, dynamic> newEntry = {};
 
+      newEntry['Site ID'] = entry['siteId'];
+
       // Filename: Extract from imageLocation
       newEntry['ImagePath'] = entry['imageLocation'];
       newEntry['Filename'] = entry['imageLocation'].split('/').last;
@@ -280,6 +282,7 @@ class _MyClassificationsState extends State<MyClassifications> {
                                   fromHive: true,
                                   latitude: data['latitude'],
                                   longitude: data['longitude'],
+                                  siteId: data['siteId'],
                                 );
                               },
                               child: ClassificationItem(

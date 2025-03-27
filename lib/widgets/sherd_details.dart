@@ -13,6 +13,7 @@ class SherdDetails extends StatelessWidget {
     required this.fromHive,
     required this.latitude,
     required this.longitude,
+    required this.siteId,
   });
 
   final String imageUrl;
@@ -22,6 +23,7 @@ class SherdDetails extends StatelessWidget {
   final bool fromHive;
   final double latitude;
   final double longitude;
+  final String siteId;
 
   String formatTimestamp(DateTime timestamp) {
     // Convert Timestamp to DateTime
@@ -91,6 +93,12 @@ class SherdDetails extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16.0),
                 child: Text(
+                  'Site ID: ${siteId}',
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                child: Text(
                   'Classification Date: ${formatTimestamp(timestamp)}',
                 ),
               ),
@@ -126,16 +134,15 @@ class SherdDetails extends StatelessWidget {
   }
 }
 
-void showSherdDetailsDialog(
-  BuildContext context, {
-  required String imageUrl,
-  required String title,
-  required Map<dynamic, dynamic> details,
-  required DateTime timestamp,
-  required bool fromHive,
-  required double latitude,
-  required double longitude,
-}) {
+void showSherdDetailsDialog(BuildContext context,
+    {required String imageUrl,
+    required String title,
+    required Map<dynamic, dynamic> details,
+    required DateTime timestamp,
+    required bool fromHive,
+    required double latitude,
+    required double longitude,
+    required String siteId}) {
   showDialog(
     context: context,
     builder: (BuildContext context) {
@@ -147,6 +154,7 @@ void showSherdDetailsDialog(
         fromHive: fromHive,
         latitude: latitude,
         longitude: longitude,
+        siteId: siteId,
       );
     },
   );

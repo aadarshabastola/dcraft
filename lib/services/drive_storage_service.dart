@@ -72,6 +72,7 @@ class DriveStorageService {
   Future<void> _createCsvWithHeaders(String parentId) async {
     final headers = [
       'Filename',
+      'Site ID',
       'Kana\'a',
       'Black Mesa',
       'Sosi',
@@ -100,6 +101,8 @@ class DriveStorageService {
   }
 
   Future<void> appendToCsv(Map<String, dynamic> data) async {
+    print(data);
+
     final craftFolderId = await _findOrCreateFolder(_craftFolderName);
     if (craftFolderId == null) throw Exception('CRAFT folder not found');
 
@@ -120,6 +123,7 @@ class DriveStorageService {
     // Append new data
     final newRow = [
       data['Filename'],
+      data['Site ID'],
       data['Kana\'a'],
       data['Black Mesa'],
       data['Sosi'],
