@@ -38,7 +38,7 @@ class _HomePageState extends State<HomePage> {
 
   Interpreter? interpreter = null;
 
-  late List<String> labels;
+  late List<String> labels = [];
 
   List<String> regular_labels = [
     "Kana'a",
@@ -156,8 +156,8 @@ class _HomePageState extends State<HomePage> {
     classifyImage();
   }
 
-  void resetScreen() async {
-    if (selectedImage != null) {
+  void resetScreen({bool hardReset = false}) async {
+    if (selectedImage != null && hardReset) {
       await selectedImage!.delete();
     }
     setState(() {
@@ -775,7 +775,7 @@ class _HomePageState extends State<HomePage> {
                   selectedImage != null && classificaitonData == null
                       ? Center(
                           child: TextButton(
-                              onPressed: resetScreen,
+                              onPressed: () => resetScreen(hardReset: true),
                               child: const Text('Clear Image')),
                         )
                       : Container(),
