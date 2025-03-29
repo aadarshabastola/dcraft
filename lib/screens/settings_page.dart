@@ -127,7 +127,7 @@ class _SettingsPageState extends State<SettingsPage> {
                   const SizedBox(height: 16),
                   Icon(
                     FontAwesomeIcons.googleDrive,
-                    size: 90,
+                    size: 40,
                     color: authService.isSignedIn ? Colors.green : null,
                   ),
                   const SizedBox(height: 16),
@@ -135,7 +135,7 @@ class _SettingsPageState extends State<SettingsPage> {
                     "Google Drive",
                     style: TextStyle(
                       fontFamily: 'Uber',
-                      fontSize: 20,
+                      fontSize: 24,
                       fontWeight: FontWeight.w700,
                       color: authService.isSignedIn ? Colors.green : null,
                     ),
@@ -144,7 +144,7 @@ class _SettingsPageState extends State<SettingsPage> {
                     authService.isSignedIn ? "Connected" : "Not Connected",
                     style: TextStyle(
                       fontFamily: 'Uber',
-                      fontSize: 35,
+                      fontSize: 24,
                       fontWeight: FontWeight.w700,
                       color: authService.isSignedIn ? Colors.green : null,
                     ),
@@ -186,87 +186,113 @@ class _SettingsPageState extends State<SettingsPage> {
                 ],
               ),
               Spacer(),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  ChoiceChip(
-                    label: const Text('ConvNexT'),
-                    selected: modelProvider.selectedModel == 'ConvNexT',
-                    onSelected: (bool selected) {
-                      if (selected) {
-                        modelProvider.setSelectedModel('ConvNexT');
-                      }
-                    },
-                  ),
-                  const SizedBox(width: 16),
-                  ChoiceChip(
-                    label: const Text('ConvNext (Non-Dogoszi)'),
-                    selected:
-                        modelProvider.selectedModel == 'ConvNext (Non-Dogoszi)',
-                    onSelected: (bool selected) {
-                      if (selected) {
-                        modelProvider
-                            .setSelectedModel('ConvNext (Non-Dogoszi)');
-                      }
-                    },
-                  ),
-                ],
+              SizedBox(
+                height: 16,
               ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.baseline,
-                textBaseline: TextBaseline.alphabetic,
-                children: [
-                  const Text(
-                    'App Theme:',
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
-                  ),
-                  const SizedBox(width: 16),
-                  Center(
-                    child: DropdownButton<ThemeMode>(
-                      value: themeProvider.themeMode,
-                      underline: Container(),
-                      items: const [
-                        DropdownMenuItem(
-                          value: ThemeMode.light,
-                          child: Row(
-                            children: [
+              const Text(
+                'Image Classification Model:',
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+              ),
+              SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    ChoiceChip(
+                      label: const Text('ConvNexT (Base)'),
+                      selected: modelProvider.selectedModel == 'ConvNexT',
+                      onSelected: (bool selected) {
+                        if (selected) {
+                          modelProvider.setSelectedModel('ConvNexT');
+                        }
+                      },
+                    ),
+                    const SizedBox(width: 16),
+                    ChoiceChip(
+                      label: const Text('ConvNext (Non-Dogoszi)'),
+                      selected: modelProvider.selectedModel ==
+                          'ConvNext (Non-Dogoszi)',
+                      onSelected: (bool selected) {
+                        if (selected) {
+                          modelProvider
+                              .setSelectedModel('ConvNext (Non-Dogoszi)');
+                        }
+                      },
+                    ),
+                  ],
+                ),
+              ),
+              SizedBox(
+                height: 16,
+              ),
+              const Text(
+                'App Theme:',
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+              ),
+              SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.baseline,
+                  textBaseline: TextBaseline.alphabetic,
+                  children: [
+                    Wrap(
+                      spacing: 8.0,
+                      children: [
+                        ChoiceChip(
+                          label: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: const [
                               Icon(Icons.light_mode, size: 18),
                               SizedBox(width: 8),
                               Text('Light'),
                             ],
                           ),
+                          selected: themeProvider.themeMode == ThemeMode.light,
+                          onSelected: (bool selected) {
+                            if (selected) {
+                              themeProvider.setTheme(ThemeMode.light);
+                            }
+                          },
                         ),
-                        DropdownMenuItem(
-                          value: ThemeMode.dark,
-                          child: Row(
-                            children: [
+                        ChoiceChip(
+                          label: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: const [
                               Icon(Icons.dark_mode, size: 18),
                               SizedBox(width: 8),
                               Text('Dark'),
                             ],
                           ),
+                          selected: themeProvider.themeMode == ThemeMode.dark,
+                          onSelected: (bool selected) {
+                            if (selected) {
+                              themeProvider.setTheme(ThemeMode.dark);
+                            }
+                          },
                         ),
-                        DropdownMenuItem(
-                          value: ThemeMode.system,
-                          child: Row(
-                            children: [
+                        ChoiceChip(
+                          label: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: const [
                               Icon(Icons.settings, size: 18),
                               SizedBox(width: 8),
                               Text('System'),
                             ],
                           ),
+                          selected: themeProvider.themeMode == ThemeMode.system,
+                          onSelected: (bool selected) {
+                            if (selected) {
+                              themeProvider.setTheme(ThemeMode.system);
+                            }
+                          },
                         ),
                       ],
-                      onChanged: (ThemeMode? newThemeMode) {
-                        if (newThemeMode != null) {
-                          themeProvider.setTheme(newThemeMode);
-                        }
-                      },
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
+              Spacer(),
               TextButton(
                 onPressed: clearAppData,
                 child: const Text("Having Issues? Clear App Data"),

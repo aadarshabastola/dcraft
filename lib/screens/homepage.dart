@@ -101,7 +101,6 @@ class _HomePageState extends State<HomePage> {
   Future<void> loadModel(String modelPath) async {
     interpreter?.close();
     interpreter = await Interpreter.fromAsset(modelPath);
-    print('Successfully loaded model $modelPath');
     _outputShape = interpreter!.getOutputTensor(0).shape;
   }
 
@@ -157,7 +156,10 @@ class _HomePageState extends State<HomePage> {
     classifyImage();
   }
 
-  void resetScreen() {
+  void resetScreen() async {
+    if (selectedImage != null) {
+      await selectedImage!.delete();
+    }
     setState(() {
       selectedImage = null;
       classificaitonData = null;
@@ -252,8 +254,6 @@ class _HomePageState extends State<HomePage> {
     if (modelProvider.selectedModel == "ConvNext (Non-Dogoszi)") {
       resultMap['Dogoszhi'] = 0.0;
     }
-
-    print(resultMap);
 
     String highestConfidenceLabel = '';
     double highestConfidenceValue = 0.0;
