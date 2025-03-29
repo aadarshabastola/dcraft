@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'dart:math';
+import 'package:dcraft/provider/model_provider.dart';
 import 'package:dcraft/screens/about/about_tww.dart';
 import 'package:dcraft/screens/edit_results.dart';
 import 'package:dcraft/screens/my_classificatoins.dart';
@@ -14,6 +15,8 @@ import 'package:page_transition/page_transition.dart';
 
 import 'package:image/image.dart' as img;
 import 'package:path_provider/path_provider.dart';
+import 'package:provider/provider.dart';
+
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tflite_flutter/tflite_flutter.dart';
 
@@ -33,8 +36,11 @@ class _HomePageState extends State<HomePage> {
 
   final TextEditingController siteIdController = TextEditingController();
 
-  late Interpreter interpreter;
-  List<String> labels = [
+  Interpreter? interpreter = null;
+
+  late List<String> labels;
+
+  List<String> regular_labels = [
     "Kana'a",
     "Black Mesa",
     "Sosi",
@@ -43,14 +49,44 @@ class _HomePageState extends State<HomePage> {
     "Tusayan",
     "Kayenta"
   ];
+
+  List<String> nd_labels = [
+    "Kana'a",
+    "Black Mesa",
+    "Sosi",
+    "Flagstaff",
+    "Tusayan",
+    "Kayenta"
+  ];
+
   late List<int> _outputShape;
 
   Map<String, dynamic>? classificatoinMap;
 
+  late ModelProvider modelProvider;
+  late String modelPath = 'assets/convnext.tflite';
+
   @override
   void initState() {
     super.initState();
-    loadModel();
+
+    loadModel(modelPath);
+
+    modelProvider = Provider.of<ModelProvider>(context, listen: false);
+
+    modelProvider.addListener(() {
+      if (modelProvider.selectedModel == "ConvNexT") {
+        modelPath = "assets/convnext.tflite";
+        labels = regular_labels;
+      }
+
+      if (modelProvider.selectedModel == "ConvNext (Non-Dogoszi)") {
+        modelPath = "assets/convnext_nd.tflite";
+        labels = nd_labels;
+      }
+      loadModel(modelPath);
+    });
+
     getSiteId();
   }
 
@@ -62,9 +98,11 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
-  Future<void> loadModel() async {
-    interpreter = await Interpreter.fromAsset('assets/convnext.tflite');
-    _outputShape = interpreter.getOutputTensor(0).shape;
+  Future<void> loadModel(String modelPath) async {
+    interpreter?.close();
+    interpreter = await Interpreter.fromAsset(modelPath);
+    print('Successfully loaded model $modelPath');
+    _outputShape = interpreter!.getOutputTensor(0).shape;
   }
 
   Future pickAndCropImage(ImageSource source) async {
@@ -160,6 +198,8 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
+  late List<String> currentLabels = labels;
+
   void classifyImage() async {
     if (currentPosition == null) {
       currentPosition = await _determinePosition();
@@ -199,7 +239,7 @@ class _HomePageState extends State<HomePage> {
     final outputBuffer =
         List.generate(1, (_) => List.filled(_outputShape[1], 0.0));
 
-    interpreter.run(input, outputBuffer);
+    interpreter!.run(input, outputBuffer);
 
     Map<String, double> resultMap = {};
 
@@ -208,6 +248,12 @@ class _HomePageState extends State<HomePage> {
 
       resultMap[labels[i]] = confidence;
     }
+
+    if (modelProvider.selectedModel == "ConvNext (Non-Dogoszi)") {
+      resultMap['Dogoszhi'] = 0.0;
+    }
+
+    print(resultMap);
 
     String highestConfidenceLabel = '';
     double highestConfidenceValue = 0.0;
@@ -218,8 +264,6 @@ class _HomePageState extends State<HomePage> {
         highestConfidenceLabel = label;
       }
     });
-
-    debugPrint('Classification Done');
 
     setState(() {
       classificatoinMap = {

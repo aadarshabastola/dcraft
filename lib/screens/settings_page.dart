@@ -1,4 +1,5 @@
 import 'package:dcraft/provider/drive_auth_provider.dart';
+import 'package:dcraft/provider/model_provider.dart';
 import 'package:dcraft/provider/theme_provider.dart';
 import 'package:dcraft/screens/about/about_craft.dart';
 import 'package:flutter/material.dart';
@@ -97,6 +98,7 @@ class _SettingsPageState extends State<SettingsPage> {
   @override
   Widget build(BuildContext context) {
     final themeProvider = Provider.of<ThemeProvider>(context, listen: true);
+    final modelProvider = Provider.of<ModelProvider>(context, listen: true);
 
     final authProvider =
         Provider.of<GoogleDriveAuthProvider>(context, listen: true);
@@ -184,6 +186,32 @@ class _SettingsPageState extends State<SettingsPage> {
                 ],
               ),
               Spacer(),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  ChoiceChip(
+                    label: const Text('ConvNexT'),
+                    selected: modelProvider.selectedModel == 'ConvNexT',
+                    onSelected: (bool selected) {
+                      if (selected) {
+                        modelProvider.setSelectedModel('ConvNexT');
+                      }
+                    },
+                  ),
+                  const SizedBox(width: 16),
+                  ChoiceChip(
+                    label: const Text('ConvNext (Non-Dogoszi)'),
+                    selected:
+                        modelProvider.selectedModel == 'ConvNext (Non-Dogoszi)',
+                    onSelected: (bool selected) {
+                      if (selected) {
+                        modelProvider
+                            .setSelectedModel('ConvNext (Non-Dogoszi)');
+                      }
+                    },
+                  ),
+                ],
+              ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.baseline,

@@ -1,4 +1,5 @@
 import 'package:dcraft/provider/drive_auth_provider.dart';
+import 'package:dcraft/provider/model_provider.dart';
 import 'package:dcraft/provider/theme_provider.dart';
 import 'package:dcraft/screens/homepage.dart';
 import 'package:flutter/material.dart';
@@ -15,6 +16,7 @@ Future<void> main() async {
     MultiProvider(providers: [
       ChangeNotifierProvider(create: (_) => ThemeProvider()),
       ChangeNotifierProvider(create: (_) => GoogleDriveAuthProvider()),
+      ChangeNotifierProvider(create: (_) => ModelProvider()),
     ], child: const MainApp()),
   );
 }

@@ -66,7 +66,7 @@ class _MyClassificationsState extends State<MyClassifications> {
             (value * 100).toStringAsFixed(2); // Convert to percentage and round
       });
 
-      // Add latitude, longitude, and timestamp
+      // Add latitude, longitude, and timestamp*
       newEntry['Latitude'] = entry['latitude'];
       newEntry['Longitude'] = entry['longitude'];
       newEntry['Timestamp'] = entry['timestamp']; // Remove milliseconds
