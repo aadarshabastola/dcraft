@@ -3,7 +3,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class ModelProvider with ChangeNotifier {
   static const String _modelKey = 'selected_model';
-  String _selectedModel = 'ConvNexT';
+  static const String _defaultModel = 'ConvNexT'; // Default model
+  String _selectedModel = _defaultModel;
 
   ModelProvider() {
     _loadSelectedModel();
@@ -15,10 +16,14 @@ class ModelProvider with ChangeNotifier {
   Future<void> _loadSelectedModel() async {
     final prefs = await SharedPreferences.getInstance();
     final savedModel = prefs.getString(_modelKey);
-    if (savedModel != null) {
-      _selectedModel = savedModel;
-      notifyListeners();
+
+    if (savedModel == null) {
+      // If no saved model, ensure default is stored in SharedPreferences
+      await _saveSelectedModel(_defaultModel);
     }
+
+    _selectedModel = savedModel ?? _defaultModel;
+    notifyListeners();
   }
 
   void setSelectedModel(String model) {
