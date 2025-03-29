@@ -28,6 +28,7 @@ class MainApp extends StatelessWidget {
     final themeProvider = Provider.of<ThemeProvider>(context);
     return MaterialApp(
       title: 'dCRAFT',
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(
           useMaterial3: true, colorScheme: MaterialTheme.lightScheme()),
       darkTheme: ThemeData(
