@@ -745,14 +745,13 @@ class _HomePageState extends State<HomePage> {
                                               0.10)
                                           .map((entry) => Text(
                                               '${entry.key}: ${entry.value.toStringAsFixed(3)}')),
-                                      // SizedBox(height: 8),
-                                      // const Text(
-                                      //   'Approximate Location',
-                                      //   style: TextStyle(
-                                      //       fontWeight: FontWeight.bold),
-                                      // ),
-                                      // Text(
-                                      //     "Latitude: ${classificatoinMap!['latitude'].toStringAsFixed(4)}"),
+                                      SizedBox(height: 8),
+                                      const Text(
+                                        'Model Used:',
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                      Text(modelProvider.selectedModel),
                                       // Text(
                                       //     "Longitude: ${classificatoinMap!['longitude'].toStringAsFixed(4)}"),
                                     ],
