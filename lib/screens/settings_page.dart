@@ -191,7 +191,7 @@ class _SettingsPageState extends State<SettingsPage> {
               ),
               const Text(
                 'Image Classification Model:',
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+                style: TextStyle(fontSize: 15),
               ),
               SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
@@ -227,7 +227,7 @@ class _SettingsPageState extends State<SettingsPage> {
               ),
               const Text(
                 'App Theme:',
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+                style: TextStyle(fontSize: 15),
               ),
               SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
@@ -292,7 +292,9 @@ class _SettingsPageState extends State<SettingsPage> {
                   ],
                 ),
               ),
-              Spacer(),
+              SizedBox(
+                height: 16,
+              ),
               TextButton(
                 onPressed: clearAppData,
                 child: const Text("Having Issues? Clear App Data"),

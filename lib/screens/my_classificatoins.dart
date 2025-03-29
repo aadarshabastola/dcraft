@@ -66,6 +66,8 @@ class _MyClassificationsState extends State<MyClassifications> {
             (value * 100).toStringAsFixed(2); // Convert to percentage and round
       });
 
+      newEntry['Model Used'] = entry['modelUsed'];
+
       // Add latitude, longitude, and timestamp*
       newEntry['Latitude'] = entry['latitude'];
       newEntry['Longitude'] = entry['longitude'];
@@ -283,6 +285,7 @@ class _MyClassificationsState extends State<MyClassifications> {
                                   latitude: data['latitude'],
                                   longitude: data['longitude'],
                                   siteId: data['siteId'],
+                                  modelUsed: data['modelUsed'],
                                 );
                               },
                               child: ClassificationItem(

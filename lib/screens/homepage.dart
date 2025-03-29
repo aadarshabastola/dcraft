@@ -340,6 +340,8 @@ class _HomePageState extends State<HomePage> {
     classificatoinMap!['longitude'] = currentPosition!.longitude;
     classificatoinMap!['siteId'] = siteIdController.text;
 
+    classificatoinMap!['modelUsed'] = modelProvider.selectedModel;
+
     // Save the site ID to shared preferences
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString('siteId', siteIdController.text);

@@ -82,7 +82,8 @@ class DriveStorageService {
       'Tusayan',
       'Latitude',
       'Longitude',
-      'Timestamp'
+      'Timestamp',
+      'Model Used'
     ].join(',');
 
     var file = drive.File()
@@ -132,6 +133,7 @@ class DriveStorageService {
       data['Latitude'],
       data['Longitude'],
       data['Timestamp'],
+      data['Model Used']
     ].join(',');
 
     final updatedContent = '$existingContent\n$newRow';
