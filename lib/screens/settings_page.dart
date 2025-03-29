@@ -127,10 +127,10 @@ class _SettingsPageState extends State<SettingsPage> {
                   const SizedBox(height: 16),
                   Icon(
                     FontAwesomeIcons.googleDrive,
-                    size: 40,
+                    size: 65,
                     color: authService.isSignedIn ? Colors.green : null,
                   ),
-                  const SizedBox(height: 16),
+                  const SizedBox(height: 8),
                   Text(
                     "Google Drive",
                     style: TextStyle(
