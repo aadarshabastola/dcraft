@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <drawable name="adaptive_icon">@mipmap-night/ic_launcher</drawable>
+</resources>

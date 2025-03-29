@@ -6,7 +6,7 @@
         android:label="dcraft"
         android:name="${applicationName}"
         android:enableOnBackInvokedCallback="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@drawable/adaptive_icon"
         android:configChanges="orientation|keyboardHidden|keyboard|screenSize"
         android:screenOrientation="portrait">
         <activity
