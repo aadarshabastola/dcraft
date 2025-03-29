@@ -241,28 +241,69 @@ class AboutTww extends StatelessWidget {
                 ),
               ),
               const Text(
-                "Paste color: Light gray to white, often with carbon streak.",
+                "Paste color:",
+                style: TextStyle(
+                  fontFamily: 'Uber',
+                  fontSize: 18,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+              const Text(
+                "Light gray to white, often with carbon streak.",
                 style: TextStyle(
                   fontFamily: 'Uber',
                   fontSize: 18,
                 ),
               ),
+              SizedBox(
+                height: 8,
+              ),
               const Text(
-                "Temper: Mostly fine sand; later types may have sherd or volcanic temper.",
+                "Temper:",
+                style: TextStyle(
+                  fontFamily: 'Uber',
+                  fontSize: 18,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+              const Text(
+                "Mostly fine sand; later types may have sherd or volcanic temper.",
                 style: TextStyle(
                   fontFamily: 'Uber',
                   fontSize: 18,
                 ),
               ),
+              SizedBox(
+                height: 8,
+              ),
               const Text(
-                "Surface Treatment: Polished. Slip uncommon in early types, but does occur in later types. Temper does not protrude through surface.",
+                "Surface Treatment:",
+                style: TextStyle(
+                  fontFamily: 'Uber',
+                  fontSize: 18,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+              const Text(
+                "Polished. Slip uncommon in early types, but does occur in later types. Temper does not protrude through surface.",
                 style: TextStyle(
                   fontFamily: 'Uber',
                   fontSize: 18,
                 ),
               ),
+              SizedBox(
+                height: 8,
+              ),
               const Text(
-                "Paint: Organic, soaks into surface. Blurred edges. Bidahochi type has mineral paint, sharp edges, dark.",
+                "Paint:",
+                style: TextStyle(
+                  fontFamily: 'Uber',
+                  fontSize: 18,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+              const Text(
+                "Organic, soaks into surface. Blurred edges. Bidahochi type has mineral paint, sharp edges, dark.",
                 style: TextStyle(
                   fontFamily: 'Uber',
                   fontSize: 18,
@@ -278,19 +319,39 @@ class AboutTww extends StatelessWidget {
                 ),
               ),
               const Text(
-                "Cibola: Light gray to white paste, often with carbon streak; sand, sherd or both temper; no slip early, thin later; mineral paint.",
+                "Cibola:",
                 style: TextStyle(
                   fontFamily: 'Uber',
                   fontSize: 18,
+                  fontWeight: FontWeight.w700,
                 ),
               ),
               const Text(
-                "Little Colorado White Ware: Darker paste color; thick white slip; sherd temper, sometimes with sand; organic paint.",
+                "Light gray to white paste, often with carbon streak; sand, sherd or both temper; no slip early, thin later; mineral paint.",
                 style: TextStyle(
                   fontFamily: 'Uber',
                   fontSize: 18,
                 ),
               ),
+              SizedBox(
+                height: 8,
+              ),
+              const Text(
+                "Little Colorado White Ware:",
+                style: TextStyle(
+                  fontFamily: 'Uber',
+                  fontSize: 18,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+              const Text(
+                "Darker paste color; thick white slip; sherd temper, sometimes with sand; organic paint.",
+                style: TextStyle(
+                  fontFamily: 'Uber',
+                  fontSize: 18,
+                ),
+              ),
+              SizedBox(height: 16),
             ],
           ),
         ),
