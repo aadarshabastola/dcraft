@@ -64,5 +64,29 @@
 	</array>
 	<key>GIDClientID</key>
 	<string>414999783497-u086k7k6e744jmpbnbf6gaj936984apd.apps.googleusercontent.com</string>
+	<key>CFBundleIcons</key>
+	<dict>
+		<key>CFBundlePrimaryIcon</key>
+		<dict>
+			<key>CFBundleIconName</key>
+			<string>AppIcon</string>
+			<key>UIPrerenderedIcon</key>
+			<true/>
+			<key>UIUserInterfaceStyle</key>
+			<string>Light</string>
+		</dict>
+		<key>CFBundleAlternateIcons</key>
+		<dict>
+			<key>AppIcon-Dark</key>
+			<dict>
+				<key>CFBundleIconName</key>
+				<string>AppIcon-Dark</string>
+				<key>UIPrerenderedIcon</key>
+				<true/>
+				<key>UIUserInterfaceStyle</key>
+				<string>Dark</string>
+			</dict>
+		</dict>
+	</dict>
 </dict>
 </plist>
