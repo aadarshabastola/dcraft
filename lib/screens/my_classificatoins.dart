@@ -70,7 +70,10 @@ class _MyClassificationsState extends State<MyClassifications> {
 
       // Add latitude, longitude, and timestamp*
       newEntry['Latitude'] = entry['latitude'];
-      newEntry['Longitude'] = entry['longitude'];
+      newEntry['Latitude'] =
+          (entry['latitude'] == 0.0) ? null : entry['latitude'];
+      newEntry['Longitude'] =
+          (entry['longitude'] == 0.0) ? null : entry['longitude'];
       newEntry['Timestamp'] = entry['timestamp']; // Remove milliseconds
 
       result.add(newEntry);

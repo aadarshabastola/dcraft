@@ -88,6 +88,31 @@ class _HomePageState extends State<HomePage> {
     });
 
     getSiteId();
+
+    // Get initial position
+    _determinePosition().then((position) {
+      setState(() {
+        currentPosition = position;
+      });
+    }).catchError((error) {
+      print('Error getting initial position: $error');
+    });
+
+    // Listen for position changes
+    final positionStream = Geolocator.getPositionStream(
+      locationSettings: const LocationSettings(
+        accuracy: LocationAccuracy.high,
+        distanceFilter: 50,
+      ),
+    );
+
+    positionStream.listen((Position position) {
+      setState(() {
+        currentPosition = position;
+      });
+    }, onError: (error) {
+      print('Position stream error: $error');
+    });
   }
 
   Future<void> getSiteId() async {
@@ -163,7 +188,6 @@ class _HomePageState extends State<HomePage> {
     setState(() {
       selectedImage = null;
       classificaitonData = null;
-      currentPosition = null;
     });
   }
 
@@ -203,11 +227,31 @@ class _HomePageState extends State<HomePage> {
   late List<String> currentLabels = labels;
 
   void classifyImage() async {
-    if (currentPosition == null) {
-      currentPosition = await _determinePosition();
-    }
+    Position pos;
+
     //randomize the position by 500 meters
-    Position pos = randomizePosition(currentPosition!, 500);
+    if (currentPosition != null &&
+        currentPosition!.latitude != 0.0 &&
+        currentPosition!.longitude != 0.0) {
+      pos = randomizePosition(currentPosition!, 500);
+    } else if (currentPosition != null) {
+      // Use the current position as is
+      pos = currentPosition!;
+    } else {
+      // Create a default position if currentPosition is null
+      pos = Position(
+        latitude: 0,
+        longitude: 0,
+        timestamp: DateTime.now(),
+        accuracy: 0,
+        altitude: 0,
+        heading: 0,
+        speed: 0,
+        speedAccuracy: 0,
+        altitudeAccuracy: 0,
+        headingAccuracy: 0,
+      );
+    }
 
     const inputSize = 224;
     // Resize the image
@@ -287,9 +331,43 @@ class _HomePageState extends State<HomePage> {
     // Test if location services are enabled.
     serviceEnabled = await Geolocator.isLocationServiceEnabled();
     if (!serviceEnabled) {
-      // Location services are not enabled don't continue
-      // accessing the position and request users of the
-      // App to enable the location services.
+      // Show dialog informing the user that location services are disabled
+      if (mounted) {
+        showDialog(
+          context: context,
+          barrierDismissible: false,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: const Text('Location Disabled'),
+              content: const Text(
+                  'Location services are disabled. Please enable location save location data'),
+              actions: <Widget>[
+                TextButton(
+                  child: const Text('OK'),
+                  onPressed: () {
+                    resetScreen();
+                    setState(() {
+                      currentPosition = Position(
+                        latitude: 0,
+                        longitude: 0,
+                        timestamp: DateTime.now(),
+                        accuracy: 0,
+                        altitude: 0,
+                        heading: 0,
+                        speed: 0,
+                        speedAccuracy: 0,
+                        altitudeAccuracy: 0,
+                        headingAccuracy: 0,
+                      );
+                    });
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ],
+            );
+          },
+        );
+      }
       return Future.error('Location services are disabled.');
     }
 
@@ -316,8 +394,8 @@ class _HomePageState extends State<HomePage> {
     // continue accessing the position of the device.
     return await Geolocator.getCurrentPosition(
       locationSettings: const LocationSettings(
-        accuracy: LocationAccuracy.high,
-        distanceFilter: 50,
+        accuracy: LocationAccuracy.low,
+        distanceFilter: 100,
       ),
     );
   }
