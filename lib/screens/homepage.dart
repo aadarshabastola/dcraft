@@ -315,6 +315,7 @@ class _HomePageState extends State<HomePage> {
         'allClassifications': resultMap,
         'latitude': pos.latitude,
         'longitude': pos.longitude,
+        'edited': false,
       };
     });
 

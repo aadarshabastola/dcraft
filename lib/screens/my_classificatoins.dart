@@ -68,6 +68,10 @@ class _MyClassificationsState extends State<MyClassifications> {
 
       newEntry['Model Used'] = entry['modelUsed'];
 
+      newEntry['Sherd Classification'] = entry['primaryClassification'];
+
+      newEntry['Corrected By User'] = entry['edited'];
+
       // Add latitude, longitude, and timestamp*
       newEntry['Latitude'] = entry['latitude'];
       newEntry['Latitude'] =
