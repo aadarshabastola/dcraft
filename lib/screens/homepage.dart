@@ -140,6 +140,8 @@ class _HomePageState extends State<HomePage> {
     CroppedFile? croppedFile = await ImageCropper().cropImage(
       sourcePath: pickedImage.path,
       aspectRatio: const CropAspectRatio(ratioX: 1, ratioY: 1),
+      maxHeight: 800,
+      maxWidth: 800,
       uiSettings: [
         AndroidUiSettings(
             initAspectRatio: CropAspectRatioPreset.original,
@@ -253,6 +255,8 @@ class _HomePageState extends State<HomePage> {
       );
     }
 
+    print("\n\n\n Preparing Resize Done");
+
     const inputSize = 224;
     // Resize the image
     final imageBytes = await selectedImage!.readAsBytes();
@@ -262,6 +266,8 @@ class _HomePageState extends State<HomePage> {
         width: inputSize,
         height: inputSize,
         interpolation: img.Interpolation.average);
+
+    print("/n/n/n Resize Done");
 
     // Prepare the input buffer for the TFLite model
     final input = List.generate(
@@ -477,206 +483,74 @@ class _HomePageState extends State<HomePage> {
       child: PopScope(
         canPop: false,
         child: Scaffold(
-          appBar: AppBar(
-            automaticallyImplyLeading: false,
-            toolbarHeight: 80,
-            title: const FittedBox(
-              fit: BoxFit.scaleDown,
+          body: SafeArea(
+            child: SingleChildScrollView(
               child: Padding(
-                padding: EdgeInsets.all(8.0),
-                child: Text(
-                  'dCRAFT',
-                  style: TextStyle(
-                      fontFamily: 'Uber',
-                      fontSize: 60,
-                      fontWeight: FontWeight.w700),
-                ),
-              ),
-            ),
-          ),
-          body: SingleChildScrollView(
-            child: Padding(
-              padding: const EdgeInsets.all(16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  selectedImage == null
-                      ? Column(
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: [
-                                Expanded(
-                                  child: GestureDetector(
-                                    onTap: () =>
-                                        pickAndCropImage(ImageSource.camera),
-                                    child: Container(
-                                      height:
-                                          MediaQuery.of(context).size.width / 3,
-                                      decoration: BoxDecoration(
-                                          color: Theme.of(context)
-                                              .colorScheme
-                                              .primary, // select color from current theme scheme
-                                          borderRadius: const BorderRadius.all(
-                                              Radius.circular(5))),
-                                      child: Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                            horizontal: 40, vertical: 8),
-                                        child: Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          children: [
-                                            Icon(
-                                              Icons.camera_alt_rounded,
-                                              size: 80,
-                                              color: Theme.of(context)
-                                                  .colorScheme
-                                                  .onPrimary,
-                                            ),
-                                            Text(
-                                              'CAMERA',
-                                              style: TextStyle(
-                                                fontSize: 15,
-                                                fontFamily: 'Uber',
-                                                fontWeight: FontWeight.w900,
-                                                color: Theme.of(context)
-                                                    .colorScheme
-                                                    .onPrimary,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                const SizedBox(width: 16),
-                                Expanded(
-                                  child: GestureDetector(
-                                    onTap: () =>
-                                        pickAndCropImage(ImageSource.gallery),
-                                    child: Container(
-                                      width: MediaQuery.of(context).size.width /
-                                          2.3,
-                                      height:
-                                          MediaQuery.of(context).size.width / 3,
-                                      decoration: BoxDecoration(
-                                          color: Theme.of(context)
-                                              .colorScheme
-                                              .primary, // select color from current theme scheme
-                                          borderRadius: const BorderRadius.all(
-                                              Radius.circular(5))),
-                                      child: Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                            horizontal: 40, vertical: 8),
-                                        child: Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          children: [
-                                            Icon(
-                                              Icons.image_rounded,
-                                              size: 80,
-                                              color: Theme.of(context)
-                                                  .colorScheme
-                                                  .onPrimary,
-                                            ),
-                                            Text(
-                                              'GALLERY',
-                                              style: TextStyle(
-                                                fontSize: 15,
-                                                fontFamily: 'Uber',
-                                                fontWeight: FontWeight.w900,
-                                                color: Theme.of(context)
-                                                    .colorScheme
-                                                    .onPrimary,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                            const SizedBox(height: 16),
-                            GestureDetector(
-                              onTap: () => Navigator.push(
-                                  context,
-                                  PageTransition(
-                                      child: const MyClassifications(),
-                                      type: PageTransitionType.fade)),
-                              child: Container(
-                                width: MediaQuery.of(context).size.width,
-                                height: MediaQuery.of(context).size.width / 3,
-                                decoration: BoxDecoration(
-                                    color: Theme.of(context)
-                                        .colorScheme
-                                        .primary, // select color from current theme scheme
-                                    borderRadius: const BorderRadius.all(
-                                        Radius.circular(5))),
-                                child: Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 40, vertical: 8),
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Icon(
-                                        Icons.history_rounded,
-                                        size: 80,
-                                        color: Theme.of(context)
-                                            .colorScheme
-                                            .onPrimary,
-                                      ),
-                                      Text(
-                                        'CLASSIFICATION HISTORY',
-                                        style: TextStyle(
-                                          fontSize: 15,
-                                          fontFamily: 'Uber',
-                                          fontWeight: FontWeight.w900,
-                                          color: Theme.of(context)
-                                              .colorScheme
-                                              .onPrimary,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
+                padding: const EdgeInsets.all(16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    selectedImage == null
+                        ? Column(
+                            children: [
+                              FittedBox(
+                                fit: BoxFit.scaleDown,
+                                child: Text(
+                                  'CRAFT',
+                                  style: TextStyle(
+                                      fontFamily: 'Uber',
+                                      fontSize: 60,
+                                      fontWeight: FontWeight.w700),
                                 ),
                               ),
-                            ),
-                            const SizedBox(height: 16),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Expanded(
-                                  child: GestureDetector(
-                                    onTap: () {
-                                      Navigator.push(
-                                          context,
-                                          PageTransition(
-                                              child: const AboutTww(),
-                                              type: PageTransitionType.fade));
-                                    },
-                                    child: Container(
-                                      height:
-                                          MediaQuery.of(context).size.width / 3,
-                                      decoration: BoxDecoration(
-                                          color: Theme.of(context)
-                                              .colorScheme
-                                              .primary, // select color from current theme scheme
-                                          borderRadius: const BorderRadius.all(
-                                              Radius.circular(5))),
-                                      child: Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                            horizontal: 40, vertical: 8),
-                                        child: Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          children: [
-                                            FittedBox(
-                                              fit: BoxFit.contain,
-                                              child: Text(
-                                                'ABOUT\nTUSAYAN\nWHITE\nWARE',
+                              FittedBox(
+                                fit: BoxFit.scaleDown,
+                                child: Text(
+                                  'Tusayan White Ware',
+                                  style: TextStyle(
+                                      fontFamily: 'Uber',
+                                      fontSize: 30,
+                                      fontWeight: FontWeight.w700),
+                                ),
+                              ),
+                              SizedBox(
+                                height: 32,
+                              ),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                children: [
+                                  Expanded(
+                                    child: GestureDetector(
+                                      onTap: () =>
+                                          pickAndCropImage(ImageSource.camera),
+                                      child: Container(
+                                        height:
+                                            MediaQuery.of(context).size.width /
+                                                3,
+                                        decoration: BoxDecoration(
+                                            color: Theme.of(context)
+                                                .colorScheme
+                                                .primary, // select color from current theme scheme
+                                            borderRadius:
+                                                const BorderRadius.all(
+                                                    Radius.circular(5))),
+                                        child: Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 40, vertical: 8),
+                                          child: Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              Icon(
+                                                Icons.camera_alt_rounded,
+                                                size: 80,
+                                                color: Theme.of(context)
+                                                    .colorScheme
+                                                    .onPrimary,
+                                              ),
+                                              Text(
+                                                'CAMERA',
                                                 style: TextStyle(
                                                   fontSize: 15,
                                                   fontFamily: 'Uber',
@@ -686,112 +560,224 @@ class _HomePageState extends State<HomePage> {
                                                       .onPrimary,
                                                 ),
                                               ),
-                                            ),
-                                          ],
+                                            ],
+                                          ),
                                         ),
                                       ),
                                     ),
                                   ),
-                                ),
-                                const SizedBox(width: 16),
-                                Expanded(
-                                  child: GestureDetector(
-                                    onTap: () {
-                                      Navigator.push(
-                                          context,
-                                          PageTransition(
-                                              child: SettingsPage(),
-                                              type: PageTransitionType.fade));
-                                    },
-                                    child: Container(
-                                      // width: MediaQuery.of(context).size.width / 2.3,
-                                      height:
-                                          MediaQuery.of(context).size.width / 3,
-                                      decoration: BoxDecoration(
-                                          color: Theme.of(context)
-                                              .colorScheme
-                                              .primary, // select color from current theme scheme
-                                          borderRadius: const BorderRadius.all(
-                                              Radius.circular(5))),
-                                      child: Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                            horizontal: 40, vertical: 8),
-                                        child: Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          children: [
-                                            Icon(
-                                              Icons.settings_rounded,
-                                              size: 80,
-                                              color: Theme.of(context)
-                                                  .colorScheme
-                                                  .onPrimary,
-                                            ),
-                                            Text(
-                                              "SETTINGS",
-                                              style: TextStyle(
-                                                fontSize: 15,
-                                                fontFamily: 'Uber',
-                                                fontWeight: FontWeight.w900,
+                                  const SizedBox(width: 16),
+                                  Expanded(
+                                    child: GestureDetector(
+                                      onTap: () =>
+                                          pickAndCropImage(ImageSource.gallery),
+                                      child: Container(
+                                        width:
+                                            MediaQuery.of(context).size.width /
+                                                2.3,
+                                        height:
+                                            MediaQuery.of(context).size.width /
+                                                3,
+                                        decoration: BoxDecoration(
+                                            color: Theme.of(context)
+                                                .colorScheme
+                                                .primary, // select color from current theme scheme
+                                            borderRadius:
+                                                const BorderRadius.all(
+                                                    Radius.circular(5))),
+                                        child: Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 40, vertical: 8),
+                                          child: Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              Icon(
+                                                Icons.image_rounded,
+                                                size: 80,
                                                 color: Theme.of(context)
                                                     .colorScheme
                                                     .onPrimary,
                                               ),
-                                            )
-                                          ],
+                                              Text(
+                                                'GALLERY',
+                                                style: TextStyle(
+                                                  fontSize: 15,
+                                                  fontFamily: 'Uber',
+                                                  fontWeight: FontWeight.w900,
+                                                  color: Theme.of(context)
+                                                      .colorScheme
+                                                      .onPrimary,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
                                         ),
                                       ),
                                     ),
                                   ),
-                                ),
-                              ],
-                            ),
-                          ],
-                        )
-                      : Container(),
-                  selectedImage != null
-                      ? AspectRatio(
-                          aspectRatio: 1,
-                          child: Container(
-                            decoration: BoxDecoration(
-                                color: Theme.of(context)
-                                    .colorScheme
-                                    .secondaryContainer, // select color from current theme scheme
-                                borderRadius:
-                                    const BorderRadius.all(Radius.circular(5))),
-                            width: MediaQuery.of(context).size.width,
-                            // height: 100,
-                            child: Center(
-                                child: selectedImage != null
-                                    ? ClipRRect(
-                                        borderRadius: BorderRadius.circular(5),
-                                        child: Image.file(
-                                          selectedImage!,
-                                          fit: BoxFit.cover,
-                                          width:
-                                              MediaQuery.of(context).size.width,
-                                        ))
-                                    : Container()),
-                          ),
-                        )
-                      : Container(),
-                  const SizedBox(
-                    height: 30,
-                  ),
-                  classificaitonData != null
-                      ? Column(
-                          children: [
-                            TextField(
-                              controller: siteIdController,
-                              decoration: InputDecoration(
-                                labelText: 'Site ID',
-                                border: OutlineInputBorder(),
+                                ],
                               ),
-                            ),
-                            SizedBox(
-                              height: 16,
-                            ),
-                            Container(
+                              const SizedBox(height: 16),
+                              GestureDetector(
+                                onTap: () => Navigator.push(
+                                    context,
+                                    PageTransition(
+                                        child: const MyClassifications(),
+                                        type: PageTransitionType.fade)),
+                                child: Container(
+                                  width: MediaQuery.of(context).size.width,
+                                  height: MediaQuery.of(context).size.width / 3,
+                                  decoration: BoxDecoration(
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .primary, // select color from current theme scheme
+                                      borderRadius: const BorderRadius.all(
+                                          Radius.circular(5))),
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 40, vertical: 8),
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Icon(
+                                          Icons.history_rounded,
+                                          size: 80,
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .onPrimary,
+                                        ),
+                                        Text(
+                                          'CLASSIFICATION HISTORY',
+                                          style: TextStyle(
+                                            fontSize: 15,
+                                            fontFamily: 'Uber',
+                                            fontWeight: FontWeight.w900,
+                                            color: Theme.of(context)
+                                                .colorScheme
+                                                .onPrimary,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(height: 16),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Expanded(
+                                    child: GestureDetector(
+                                      onTap: () {
+                                        Navigator.push(
+                                            context,
+                                            PageTransition(
+                                                child: const AboutTww(),
+                                                type: PageTransitionType.fade));
+                                      },
+                                      child: Container(
+                                        height:
+                                            MediaQuery.of(context).size.width /
+                                                3,
+                                        decoration: BoxDecoration(
+                                            color: Theme.of(context)
+                                                .colorScheme
+                                                .primary, // select color from current theme scheme
+                                            borderRadius:
+                                                const BorderRadius.all(
+                                                    Radius.circular(5))),
+                                        child: Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 40, vertical: 8),
+                                          child: Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              FittedBox(
+                                                fit: BoxFit.contain,
+                                                child: Text(
+                                                  'ABOUT\nTUSAYAN\nWHITE\nWARE',
+                                                  style: TextStyle(
+                                                    fontSize: 15,
+                                                    fontFamily: 'Uber',
+                                                    fontWeight: FontWeight.w900,
+                                                    color: Theme.of(context)
+                                                        .colorScheme
+                                                        .onPrimary,
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  const SizedBox(width: 16),
+                                  Expanded(
+                                    child: GestureDetector(
+                                      onTap: () {
+                                        Navigator.push(
+                                            context,
+                                            PageTransition(
+                                                child: SettingsPage(),
+                                                type: PageTransitionType.fade));
+                                      },
+                                      child: Container(
+                                        // width: MediaQuery.of(context).size.width / 2.3,
+                                        height:
+                                            MediaQuery.of(context).size.width /
+                                                3,
+                                        decoration: BoxDecoration(
+                                            color: Theme.of(context)
+                                                .colorScheme
+                                                .primary, // select color from current theme scheme
+                                            borderRadius:
+                                                const BorderRadius.all(
+                                                    Radius.circular(5))),
+                                        child: Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 40, vertical: 8),
+                                          child: Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              Icon(
+                                                Icons.settings_rounded,
+                                                size: 80,
+                                                color: Theme.of(context)
+                                                    .colorScheme
+                                                    .onPrimary,
+                                              ),
+                                              Text(
+                                                "SETTINGS",
+                                                style: TextStyle(
+                                                  fontSize: 15,
+                                                  fontFamily: 'Uber',
+                                                  fontWeight: FontWeight.w900,
+                                                  color: Theme.of(context)
+                                                      .colorScheme
+                                                      .onPrimary,
+                                                ),
+                                              )
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          )
+                        : Container(),
+                    selectedImage != null
+                        ? AspectRatio(
+                            aspectRatio: 1,
+                            child: Container(
                               decoration: BoxDecoration(
                                   color: Theme.of(context)
                                       .colorScheme
@@ -799,115 +785,157 @@ class _HomePageState extends State<HomePage> {
                                   borderRadius: const BorderRadius.all(
                                       Radius.circular(5))),
                               width: MediaQuery.of(context).size.width,
-                              child: Padding(
-                                  padding: const EdgeInsets.all(12.0),
-                                  child: Column(
-                                    children: [
-                                      Text(
-                                        "${classificatoinMap!['primaryClassification'].toString()} [${classificatoinMap!['allClassifications']?[classificatoinMap!['primaryClassification']]?.toStringAsFixed(3) ?? "0.0"}]",
-                                        style: const TextStyle(
-                                            fontSize: 20,
-                                            fontWeight: FontWeight.bold),
-                                      ),
-                                      const Text(
-                                        'Model Prediction:',
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.bold),
-                                      ),
-                                      ...classificatoinMap![
-                                              'allClassifications']
-                                          .entries
-                                          .where((entry) =>
-                                              (entry as MapEntry<String,
-                                                      double>)
-                                                  .value >
-                                              0.10)
-                                          .map((entry) => Text(
-                                              '${entry.key}: ${entry.value.toStringAsFixed(3)}')),
-                                      SizedBox(height: 8),
-                                      const Text(
-                                        'Model Used:',
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.bold),
-                                      ),
-                                      Text(modelProvider.selectedModel),
-                                      // Text(
-                                      //     "Longitude: ${classificatoinMap!['longitude'].toStringAsFixed(4)}"),
-                                    ],
-                                  )),
+                              // height: 100,
+                              child: Center(
+                                  child: selectedImage != null
+                                      ? ClipRRect(
+                                          borderRadius:
+                                              BorderRadius.circular(5),
+                                          child: Image.file(
+                                            selectedImage!,
+                                            fit: BoxFit.cover,
+                                            width: MediaQuery.of(context)
+                                                .size
+                                                .width,
+                                          ))
+                                      : Container()),
                             ),
-                          ],
-                        )
-                      : Container(),
-                  const SizedBox(
-                    height: 16,
-                  ),
-                  selectedImage != null && classificaitonData == null
-                      // ? Center(
-                      //     child: FilledButton(
-                      //         onPressed: classifyImage,
-                      //         child: const Text('Classify')),
-                      //   )
-                      ? const Center(
-                          child: CircularProgressIndicator(),
-                        )
-                      : Container(),
-                  selectedImage != null && classificaitonData == null
-                      ? Center(
-                          child: TextButton(
-                              onPressed: () => resetScreen(hardReset: true),
-                              child: const Text('Clear Image')),
-                        )
-                      : Container(),
-                  selectedImage != null && classificaitonData != null
-                      ? Center(
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          )
+                        : Container(),
+                    const SizedBox(
+                      height: 30,
+                    ),
+                    classificaitonData != null
+                        ? Column(
                             children: [
-                              FilledButton(
-                                  onPressed: saveClassificationLocally,
-                                  child: const Text('Save Classification')),
-                              FilledButton(
-                                  onPressed: () {
-                                    Navigator.push(
-                                        context,
-                                        PageTransition(
-                                            child: const AboutTww(),
-                                            type: PageTransitionType.fade));
-                                  },
-                                  child: const Text('TWW About')),
+                              TextField(
+                                controller: siteIdController,
+                                decoration: InputDecoration(
+                                  labelText: 'Site ID',
+                                  border: OutlineInputBorder(),
+                                ),
+                              ),
+                              SizedBox(
+                                height: 16,
+                              ),
+                              Container(
+                                decoration: BoxDecoration(
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .secondaryContainer, // select color from current theme scheme
+                                    borderRadius: const BorderRadius.all(
+                                        Radius.circular(5))),
+                                width: MediaQuery.of(context).size.width,
+                                child: Padding(
+                                    padding: const EdgeInsets.all(12.0),
+                                    child: Column(
+                                      children: [
+                                        Text(
+                                          "${classificatoinMap!['primaryClassification'].toString()} [${classificatoinMap!['allClassifications']?[classificatoinMap!['primaryClassification']]?.toStringAsFixed(3) ?? "0.0"}]",
+                                          style: const TextStyle(
+                                              fontSize: 20,
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                        const Text(
+                                          'Model Prediction:',
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                        ...classificatoinMap![
+                                                'allClassifications']
+                                            .entries
+                                            .where((entry) =>
+                                                (entry as MapEntry<String,
+                                                        double>)
+                                                    .value >
+                                                0.10)
+                                            .map((entry) => Text(
+                                                '${entry.key}: ${entry.value.toStringAsFixed(3)}')),
+                                        SizedBox(height: 8),
+                                        const Text(
+                                          'Model Used:',
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                        Text(modelProvider.selectedModel),
+                                        // Text(
+                                        //     "Longitude: ${classificatoinMap!['longitude'].toStringAsFixed(4)}"),
+                                      ],
+                                    )),
+                              ),
                             ],
-                          ),
-                        )
-                      : Container(),
+                          )
+                        : Container(),
+                    const SizedBox(
+                      height: 16,
+                    ),
+                    selectedImage != null && classificaitonData == null
+                        ? Center(
+                            child: FilledButton(
+                                onPressed: classifyImage,
+                                child: const Text('Classify')),
+                          )
+                        // ? const Center(
+                        //     child: CircularProgressIndicator(),
+                        //   )
+                        : Container(),
+                    selectedImage != null && classificaitonData == null
+                        ? Center(
+                            child: TextButton(
+                                onPressed: () => resetScreen(hardReset: true),
+                                child: const Text('Clear Image')),
+                          )
+                        : Container(),
+                    selectedImage != null && classificaitonData != null
+                        ? Center(
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                FilledButton(
+                                    onPressed: saveClassificationLocally,
+                                    child: const Text('Save Classification')),
+                                FilledButton(
+                                    onPressed: () {
+                                      Navigator.push(
+                                          context,
+                                          PageTransition(
+                                              child: const AboutTww(),
+                                              type: PageTransitionType.fade));
+                                    },
+                                    child: const Text('TWW About')),
+                              ],
+                            ),
+                          )
+                        : Container(),
 
-                  selectedImage != null && classificaitonData != null
-                      ? Center(
-                          child: TextButton(
-                              onPressed: resetScreen,
-                              child:
-                                  const Text('Clear Image and Classification')),
-                        )
-                      : Container(),
-                  selectedImage != null && classificaitonData != null
-                      ? Center(
-                          child: TextButton(
-                              onPressed: editClassification,
-                              child: const Text('Edit Classification')),
-                        )
-                      : Container(),
+                    selectedImage != null && classificaitonData != null
+                        ? Center(
+                            child: TextButton(
+                                onPressed: resetScreen,
+                                child: const Text(
+                                    'Clear Image and Classification')),
+                          )
+                        : Container(),
+                    selectedImage != null && classificaitonData != null
+                        ? Center(
+                            child: TextButton(
+                                onPressed: editClassification,
+                                child: const Text('Edit Classification')),
+                          )
+                        : Container(),
 
-                  // for testing purposes
-                  // Center(
-                  //   child: FilledButton(
-                  //       onPressed: () {
-                  //         var box = Hive.box('classificationBox');
+                    // for testing purposes
+                    // Center(
+                    //   child: FilledButton(
+                    //       onPressed: () {
+                    //         var box = Hive.box('classificationBox');
 
-                  //         box.clear();
-                  //       },
-                  //       child: const Text('Clear Local Storage')),
-                  // ),
-                ],
+                    //         box.clear();
+                    //       },
+                    //       child: const Text('Clear Local Storage')),
+                    // ),
+                  ],
+                ),
               ),
             ),
           ),
