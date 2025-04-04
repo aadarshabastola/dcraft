@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'dart:math';
 import 'package:dcraft/provider/model_provider.dart';
 import 'package:dcraft/screens/about/about_tww.dart';
 import 'package:dcraft/screens/edit_results.dart';
@@ -195,35 +194,37 @@ class _HomePageState extends State<HomePage> {
 
   Position randomizePosition(Position position, double distanceMeters) {
     // Constants
-    const double earthRadius = 6371000; // Earth's radius in meters
+    // const double earthRadius = 6371000; // Earth's radius in meters
 
-    // Convert distanceMeters meters to degrees
-    double randomDistance = distanceMeters; // 500 meters
-    double latOffset = (randomDistance / earthRadius) * (180 / pi);
-    double lonOffset =
-        (randomDistance / (earthRadius * cos(pi * position.latitude / 180))) *
-            (180 / pi);
+    // // Convert distanceMeters meters to degrees
+    // double randomDistance = distanceMeters; // 500 meters
+    // double latOffset = (randomDistance / earthRadius) * (180 / pi);
+    // double lonOffset =
+    //     (randomDistance / (earthRadius * cos(pi * position.latitude / 180))) *
+    //         (180 / pi);
 
-    // Generate random numbers to decide the direction of change
-    double randomLat = (Random().nextDouble() * 2 - 1) * latOffset;
-    double randomLon = (Random().nextDouble() * 2 - 1) * lonOffset;
+    // // Generate random numbers to decide the direction of change
+    // double randomLat = (Random().nextDouble() * 2 - 1) * latOffset;
+    // double randomLon = (Random().nextDouble() * 2 - 1) * lonOffset;
 
-    // Calculate new random position
-    double newLatitude = position.latitude + randomLat;
-    double newLongitude = position.longitude + randomLon;
+    // // Calculate new random position
+    // double newLatitude = position.latitude + randomLat;
+    // double newLongitude = position.longitude + randomLon;
 
-    return Position(
-      latitude: newLatitude,
-      longitude: newLongitude,
-      headingAccuracy: position.headingAccuracy,
-      altitudeAccuracy: position.altitudeAccuracy,
-      timestamp: position.timestamp,
-      accuracy: position.accuracy,
-      altitude: position.altitude,
-      heading: position.heading,
-      speed: position.speed,
-      speedAccuracy: position.speedAccuracy,
-    );
+    // return Position(
+    //   latitude: newLatitude,
+    //   longitude: newLongitude,
+    //   headingAccuracy: position.headingAccuracy,
+    //   altitudeAccuracy: position.altitudeAccuracy,
+    //   timestamp: position.timestamp,
+    //   accuracy: position.accuracy,
+    //   altitude: position.altitude,
+    //   heading: position.heading,
+    //   speed: position.speed,
+    //   speedAccuracy: position.speedAccuracy,
+    // );
+
+    return position;
   }
 
   late List<String> currentLabels = labels;

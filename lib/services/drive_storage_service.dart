@@ -73,7 +73,7 @@ class DriveStorageService {
     final headers = [
       'Filename',
       'Site ID',
-      'Sherd Classification',
+      'Classification Result',
       'Kana\'a',
       'Black Mesa',
       'Sosi',
@@ -125,7 +125,7 @@ class DriveStorageService {
     final newRow = [
       data['Filename'],
       data['Site ID'],
-      data['Sherd Classification'],
+      data['Classification Result'],
       data['Kana\'a'],
       data['Black Mesa'],
       data['Sosi'],
