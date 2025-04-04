@@ -192,71 +192,10 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
-  Position randomizePosition(Position position, double distanceMeters) {
-    // Constants
-    // const double earthRadius = 6371000; // Earth's radius in meters
-
-    // // Convert distanceMeters meters to degrees
-    // double randomDistance = distanceMeters; // 500 meters
-    // double latOffset = (randomDistance / earthRadius) * (180 / pi);
-    // double lonOffset =
-    //     (randomDistance / (earthRadius * cos(pi * position.latitude / 180))) *
-    //         (180 / pi);
-
-    // // Generate random numbers to decide the direction of change
-    // double randomLat = (Random().nextDouble() * 2 - 1) * latOffset;
-    // double randomLon = (Random().nextDouble() * 2 - 1) * lonOffset;
-
-    // // Calculate new random position
-    // double newLatitude = position.latitude + randomLat;
-    // double newLongitude = position.longitude + randomLon;
-
-    // return Position(
-    //   latitude: newLatitude,
-    //   longitude: newLongitude,
-    //   headingAccuracy: position.headingAccuracy,
-    //   altitudeAccuracy: position.altitudeAccuracy,
-    //   timestamp: position.timestamp,
-    //   accuracy: position.accuracy,
-    //   altitude: position.altitude,
-    //   heading: position.heading,
-    //   speed: position.speed,
-    //   speedAccuracy: position.speedAccuracy,
-    // );
-
-    return position;
-  }
-
   late List<String> currentLabels = labels;
 
   void classifyImage() async {
-    Position pos;
-
-    //randomize the position by 500 meters
-    if (currentPosition != null &&
-        currentPosition!.latitude != 0.0 &&
-        currentPosition!.longitude != 0.0) {
-      pos = randomizePosition(currentPosition!, 500);
-    } else if (currentPosition != null) {
-      // Use the current position as is
-      pos = currentPosition!;
-    } else {
-      // Create a default position if currentPosition is null
-      pos = Position(
-        latitude: 0,
-        longitude: 0,
-        timestamp: DateTime.now(),
-        accuracy: 0,
-        altitude: 0,
-        heading: 0,
-        speed: 0,
-        speedAccuracy: 0,
-        altitudeAccuracy: 0,
-        headingAccuracy: 0,
-      );
-    }
-
-    print("\n\n\n Preparing Resize Done");
+    Position pos = currentPosition!;
 
     const inputSize = 224;
     // Resize the image
@@ -267,8 +206,6 @@ class _HomePageState extends State<HomePage> {
         width: inputSize,
         height: inputSize,
         interpolation: img.Interpolation.average);
-
-    print("/n/n/n Resize Done");
 
     // Prepare the input buffer for the TFLite model
     final input = List.generate(
@@ -408,7 +345,6 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  // Saving Data locally
   void saveClassificationLocally() async {
     if (siteIdController.text.isEmpty) {
       _showError('Site ID cannot be empty.');
