@@ -173,7 +173,7 @@ class _HomePageState extends State<HomePage> {
     // Save the processed image to the permanent storage
     final processedImageFile = File(filePath);
     await processedImageFile
-        .writeAsBytes(img.encodeJpg(resizedGrayscaleImage, quality: 70));
+        .writeAsBytes(img.encodeJpg(resizedGrayscaleImage, quality: 80));
 
     setState(() {
       selectedImage = File(filePath);
@@ -402,7 +402,7 @@ class _HomePageState extends State<HomePage> {
     // continue accessing the position of the device.
     return await Geolocator.getCurrentPosition(
       locationSettings: const LocationSettings(
-        accuracy: LocationAccuracy.low,
+        accuracy: LocationAccuracy.high,
         distanceFilter: 100,
       ),
     );
@@ -871,14 +871,14 @@ class _HomePageState extends State<HomePage> {
                       height: 16,
                     ),
                     selectedImage != null && classificaitonData == null
-                        ? Center(
-                            child: FilledButton(
-                                onPressed: classifyImage,
-                                child: const Text('Classify')),
-                          )
-                        // ? const Center(
-                        //     child: CircularProgressIndicator(),
+                        // ? Center(
+                        //     child: FilledButton(
+                        //         onPressed: classifyImage,
+                        //         child: const Text('Classify')),
                         //   )
+                        ? const Center(
+                            child: CircularProgressIndicator(),
+                          )
                         : Container(),
                     selectedImage != null && classificaitonData == null
                         ? Center(
