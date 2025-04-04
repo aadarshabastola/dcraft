@@ -225,7 +225,7 @@ class _HomePageState extends State<HomePage> {
       }
     }
 
-// Run the model inference
+    // Run the model inference
     final outputBuffer =
         List.generate(1, (_) => List.filled(_outputShape[1], 0.0));
 
