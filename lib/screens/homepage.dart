@@ -259,7 +259,6 @@ class _HomePageState extends State<HomePage> {
         'allClassifications': resultMap,
         'latitude': pos.latitude,
         'longitude': pos.longitude,
-        'edited': false,
       };
     });
 
@@ -436,7 +435,7 @@ class _HomePageState extends State<HomePage> {
                                   'CRAFT',
                                   style: TextStyle(
                                       fontFamily: 'Uber',
-                                      fontSize: 60,
+                                      fontSize: 40,
                                       fontWeight: FontWeight.w700),
                                 ),
                               ),

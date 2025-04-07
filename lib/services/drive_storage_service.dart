@@ -73,7 +73,8 @@ class DriveStorageService {
     final headers = [
       'Filename',
       'Site ID',
-      'Classification Result',
+      'Accepted Result',
+      'ML Result',
       'Kana\'a',
       'Black Mesa',
       'Sosi',
@@ -85,7 +86,6 @@ class DriveStorageService {
       'Longitude',
       'Timestamp',
       'Model Used',
-      'Corrected By User'
     ].join(',');
 
     var file = drive.File()
@@ -125,7 +125,8 @@ class DriveStorageService {
     final newRow = [
       data['Filename'],
       data['Site ID'],
-      data['Classification Result'],
+      data['Accepted Result'],
+      data['ML Result'],
       data['Kana\'a'],
       data['Black Mesa'],
       data['Sosi'],
@@ -137,7 +138,6 @@ class DriveStorageService {
       data['Longitude'],
       data['Timestamp'],
       data['Model Used'],
-      data['Corrected By User']
     ].join(',');
 
     final updatedContent = '$existingContent\n$newRow';

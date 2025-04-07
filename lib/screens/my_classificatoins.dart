@@ -68,9 +68,13 @@ class _MyClassificationsState extends State<MyClassifications> {
 
       newEntry['Model Used'] = entry['modelUsed'];
 
-      newEntry['Classification Result'] = entry['primaryClassification'];
+      newEntry['Accepted Result'] = entry['primaryClassification'];
 
-      newEntry['Corrected By User'] = entry['edited'];
+      newEntry['ML Result'] =
+          (entry['allClassifications'] as Map<String, double>)
+              .entries
+              .reduce((a, b) => a.value > b.value ? a : b)
+              .key;
 
       // Add latitude, longitude, and timestamp*
       newEntry['Latitude'] = entry['latitude'];

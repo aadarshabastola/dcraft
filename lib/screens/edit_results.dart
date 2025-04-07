@@ -28,8 +28,7 @@ class _EditResultsState extends State<EditResults> {
 
   void onSaveClassificatoin(Map<String, dynamic>? classificatoinMap) async {
     final GoogleMapController controller = await _controller.future;
-    final String initialClassification =
-        classificatoinMap?['primaryClassification'];
+
     LatLngBounds visibleRegion = await controller.getVisibleRegion();
     LatLng centerLatLng = LatLng(
       (visibleRegion.northeast.latitude + visibleRegion.southwest.latitude) / 2,
@@ -45,14 +44,6 @@ class _EditResultsState extends State<EditResults> {
 
     newClassificationMap?['latitude'] = centerLatLng.latitude;
     newClassificationMap?['longitude'] = centerLatLng.longitude;
-
-    if (newClassificationMap?['primaryClassification'] !=
-        initialClassification) {
-      newClassificationMap?['edited'] = true;
-    }
-
-    print(newClassificationMap?['primaryClassification']);
-    print(initialClassification);
 
     if (mounted) {
       Navigator.pop(context, newClassificationMap);

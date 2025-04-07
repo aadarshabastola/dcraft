@@ -1,6 +1,7 @@
 import 'package:dcraft/provider/drive_auth_provider.dart';
 import 'package:dcraft/provider/model_provider.dart';
 import 'package:dcraft/provider/theme_provider.dart';
+import 'package:dcraft/screens/app_expired.dart';
 import 'package:dcraft/screens/homepage.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -12,17 +13,23 @@ Future<void> main() async {
   await Hive.initFlutter();
   await Hive.openBox("classificationBox");
 
+  DateTime now = DateTime.now();
+  DateTime expirationDate = DateTime(2025, 7, 15);
+
+  bool isExpired = now.isAfter(expirationDate);
+
   runApp(
     MultiProvider(providers: [
       ChangeNotifierProvider(create: (_) => ThemeProvider()),
       ChangeNotifierProvider(create: (_) => GoogleDriveAuthProvider()),
       ChangeNotifierProvider(create: (_) => ModelProvider()),
-    ], child: const MainApp()),
+    ], child: MainApp(isExpired: isExpired)),
   );
 }
 
 class MainApp extends StatelessWidget {
-  const MainApp({super.key});
+  final bool isExpired;
+  const MainApp({super.key, required this.isExpired});
   @override
   Widget build(BuildContext context) {
     final themeProvider = Provider.of<ThemeProvider>(context);
@@ -36,8 +43,9 @@ class MainApp extends StatelessWidget {
       themeMode: themeProvider.themeMode,
       routes: {
         HomePage.id: (context) => const HomePage(),
+        AppExpired.id: (context) => const AppExpired(),
       },
-      initialRoute: HomePage.id,
+      initialRoute: isExpired ? AppExpired.id : HomePage.id,
     );
   }
 }
