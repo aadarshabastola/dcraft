@@ -112,17 +112,9 @@ class AboutDogoszhi extends StatelessWidget {
                   SizedBox(height: 8),
                   Text(
                     "● Parallel lines filled with diagonal hachures, sometimes in curving \"wing\" or \"claw\".",
-                    style: TextStyle(
-                      fontFamily: 'Uber',
-                      fontSize: 18,
-                    ),
                   ),
                   Text(
                     "● Sweeping and often interlocking hachure rectilinear and curvilinear patterns.",
-                    style: TextStyle(
-                      fontFamily: 'Uber',
-                      fontSize: 18,
-                    ),
                   ),
                 ],
               ),

@@ -108,31 +108,15 @@ class AboutKnaa extends StatelessWidget {
                   SizedBox(height: 8),
                   Text(
                     "● Fine lines rendered with multiple, overlapping brush strokes.",
-                    style: TextStyle(
-                      fontFamily: 'Uber',
-                      fontSize: 18,
-                    ),
                   ),
                   Text(
                     "● Overlapping line junctions.",
-                    style: TextStyle(
-                      fontFamily: 'Uber',
-                      fontSize: 18,
-                    ),
                   ),
                   Text(
                     "● Small ticking lines or elongated dots attached to longer lines.",
-                    style: TextStyle(
-                      fontFamily: 'Uber',
-                      fontSize: 18,
-                    ),
                   ),
                   Text(
                     "● Pendant triangles or chevrons.",
-                    style: TextStyle(
-                      fontFamily: 'Uber',
-                      fontSize: 18,
-                    ),
                   ),
                 ],
               ),

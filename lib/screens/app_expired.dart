@@ -31,7 +31,7 @@ class AppExpired extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16.0),
             child: Text(
-              'This build of CRAFT expired on 07/15/2025.',
+              'This build of CRAFT expired on 09/01/2025.',
               textAlign: TextAlign.center,
             ),
           ),

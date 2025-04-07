@@ -34,10 +34,6 @@ class AboutCraft extends StatelessWidget {
                 children: [
                   Text(
                     "The goal of CRAFT is to increase the consistency of classification streamline the process of classifying Tusayan White Ware pottery shards by archeologists, use use cutting edge ConvNeXT model for imagge classification to ensure consistency and accuracy for TWW classifications.",
-                    style: TextStyle(
-                      fontFamily: 'Uber',
-                      fontSize: 18,
-                    ),
                   ),
                   SizedBox(height: 16),
                   Text(
@@ -52,16 +48,11 @@ class AboutCraft extends StatelessWidget {
                   Text(
                     "    Dr. Leszek Pawlowicz ",
                     style: TextStyle(
-                      fontFamily: 'Uber',
                       fontSize: 18,
                     ),
                   ),
                   Text(
-                    "    Leszek.Pawlowicz@nau.edu",
-                    style: TextStyle(
-                      fontFamily: 'Uber',
-                      fontSize: 15,
-                    ),
+                    "     Leszek.Pawlowicz@nau.edu",
                   ),
                   SizedBox(
                     height: 16,
@@ -76,32 +67,16 @@ class AboutCraft extends StatelessWidget {
                   ),
                   SizedBox(height: 8),
                   Text(
-                    "    Kimberly Allison",
-                    style: TextStyle(
-                      fontFamily: 'Uber',
-                      fontSize: 18,
-                    ),
+                    "     Kimberly Allison",
                   ),
                   Text(
-                    "    Aadarsha Bastola",
-                    style: TextStyle(
-                      fontFamily: 'Uber',
-                      fontSize: 18,
-                    ),
+                    "     Aadarsha Bastola",
                   ),
                   Text(
-                    "    Alan Hakala",
-                    style: TextStyle(
-                      fontFamily: 'Uber',
-                      fontSize: 18,
-                    ),
+                    "     Alan Hakala",
                   ),
                   Text(
-                    "    Nick Wiley",
-                    style: TextStyle(
-                      fontFamily: 'Uber',
-                      fontSize: 18,
-                    ),
+                    "     Nick Wiley",
                   ),
                 ],
               ),

@@ -117,17 +117,9 @@ class AboutSosi extends StatelessWidget {
                   SizedBox(height: 8),
                   Text(
                     "● Medium painted lines that repeatedly fold back on themselves with acute or right angles.",
-                    style: TextStyle(
-                      fontFamily: 'Uber',
-                      fontSize: 18,
-                    ),
                   ),
                   Text(
                     "● Attached, large barbed elements.",
-                    style: TextStyle(
-                      fontFamily: 'Uber',
-                      fontSize: 18,
-                    ),
                   ),
                 ],
               ),

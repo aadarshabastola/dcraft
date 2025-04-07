@@ -117,24 +117,12 @@ class AboutBlackMesa extends StatelessWidget {
                   SizedBox(height: 8),
                   Text(
                     "● Darker/bolder than Kana'a.",
-                    style: TextStyle(
-                      fontFamily: 'Uber',
-                      fontSize: 18,
-                    ),
                   ),
                   Text(
                     "● Massive geometric elements (triangles, rectangles, diamonds and squares).",
-                    style: TextStyle(
-                      fontFamily: 'Uber',
-                      fontSize: 18,
-                    ),
                   ),
                   Text(
                     "● Thick lines and isosceles triangles with pendant dots.",
-                    style: TextStyle(
-                      fontFamily: 'Uber',
-                      fontSize: 18,
-                    ),
                   ),
                 ],
               ),

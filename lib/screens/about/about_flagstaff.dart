@@ -117,31 +117,15 @@ class AboutFlagstaff extends StatelessWidget {
                   SizedBox(height: 8),
                   Text(
                     "● Rectilinear interlocking scrolls.",
-                    style: TextStyle(
-                      fontFamily: 'Uber',
-                      fontSize: 18,
-                    ),
                   ),
                   Text(
                     "● Sharply-barbed lines opposing other barbed lines.",
-                    style: TextStyle(
-                      fontFamily: 'Uber',
-                      fontSize: 18,
-                    ),
                   ),
                   Text(
                     "● Checkerboard patterns with central dots.",
-                    style: TextStyle(
-                      fontFamily: 'Uber',
-                      fontSize: 18,
-                    ),
                   ),
                   Text(
                     "● Basketweave patterns.",
-                    style: TextStyle(
-                      fontFamily: 'Uber',
-                      fontSize: 18,
-                    ),
                   ),
                 ],
               ),

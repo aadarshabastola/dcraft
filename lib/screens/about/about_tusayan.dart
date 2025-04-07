@@ -118,31 +118,15 @@ class AboutTusayan extends StatelessWidget {
                   SizedBox(height: 8),
                   Text(
                     '● Multiple lines of opposing linear dull barbs/"teeth".',
-                    style: TextStyle(
-                      fontFamily: 'Uber',
-                      fontSize: 18,
-                    ),
                   ),
                   Text(
                     '● "Spurred" triangles topped with interlocking rectilinear scrolls.',
-                    style: TextStyle(
-                      fontFamily: 'Uber',
-                      fontSize: 18,
-                    ),
                   ),
                   Text(
                     '● Tightly-wrapped curvilinear scrolls.',
-                    style: TextStyle(
-                      fontFamily: 'Uber',
-                      fontSize: 18,
-                    ),
                   ),
                   Text(
                     '● Massive geometric elements or thick (> 1 cm) lines, often separated by thin parallel lines.',
-                    style: TextStyle(
-                      fontFamily: 'Uber',
-                      fontSize: 18,
-                    ),
                   ),
                 ],
               ),

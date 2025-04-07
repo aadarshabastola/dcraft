@@ -210,14 +210,11 @@ class AboutTww extends StatelessWidget {
               ),
               const Text(
                 "Primarily between modern day Tuba City and Kayenta (Kayenta Series).",
-                style: TextStyle(
-                  fontFamily: 'Uber',
-                  fontSize: 18,
-                ),
+                style: TextStyle(),
               ),
               const SizedBox(height: 16),
               const Text(
-                'Distribution:',
+                'Distribution',
                 style: TextStyle(
                   fontFamily: 'Uber',
                   fontSize: 25,
@@ -226,14 +223,10 @@ class AboutTww extends StatelessWidget {
               ),
               const Text(
                 "Throughout much of the US Southwest.",
-                style: TextStyle(
-                  fontFamily: 'Uber',
-                  fontSize: 18,
-                ),
               ),
               const SizedBox(height: 16),
               const Text(
-                'Physical Characteristics:',
+                'Physical Characteristics',
                 style: TextStyle(
                   fontFamily: 'Uber',
                   fontSize: 25,
@@ -241,73 +234,53 @@ class AboutTww extends StatelessWidget {
                 ),
               ),
               const Text(
-                "Paste color:",
+                "Paste color",
                 style: TextStyle(
-                  fontFamily: 'Uber',
                   fontSize: 18,
                   fontWeight: FontWeight.w700,
                 ),
               ),
               const Text(
                 "Light gray to white, often with carbon streak.",
-                style: TextStyle(
-                  fontFamily: 'Uber',
-                  fontSize: 18,
-                ),
               ),
               SizedBox(
                 height: 8,
               ),
               const Text(
-                "Temper:",
+                "Temper",
                 style: TextStyle(
-                  fontFamily: 'Uber',
                   fontSize: 18,
                   fontWeight: FontWeight.w700,
                 ),
               ),
               const Text(
                 "Mostly fine sand; later types may have sherd or volcanic temper.",
-                style: TextStyle(
-                  fontFamily: 'Uber',
-                  fontSize: 18,
-                ),
               ),
               SizedBox(
                 height: 8,
               ),
               const Text(
-                "Surface Treatment:",
+                "Surface Treatment",
                 style: TextStyle(
-                  fontFamily: 'Uber',
                   fontSize: 18,
                   fontWeight: FontWeight.w700,
                 ),
               ),
               const Text(
                 "Polished. Slip uncommon in early types, but does occur in later types. Temper does not protrude through surface.",
-                style: TextStyle(
-                  fontFamily: 'Uber',
-                  fontSize: 18,
-                ),
               ),
               SizedBox(
                 height: 8,
               ),
               const Text(
-                "Paint:",
+                "Paint",
                 style: TextStyle(
-                  fontFamily: 'Uber',
                   fontSize: 18,
                   fontWeight: FontWeight.w700,
                 ),
               ),
               const Text(
                 "Organic, soaks into surface. Blurred edges. Bidahochi type has mineral paint, sharp edges, dark.",
-                style: TextStyle(
-                  fontFamily: 'Uber',
-                  fontSize: 18,
-                ),
               ),
               const SizedBox(height: 16),
               const Text(
@@ -319,37 +292,27 @@ class AboutTww extends StatelessWidget {
                 ),
               ),
               const Text(
-                "Cibola:",
+                "Cibola",
                 style: TextStyle(
-                  fontFamily: 'Uber',
                   fontSize: 18,
                   fontWeight: FontWeight.w700,
                 ),
               ),
               const Text(
                 "Light gray to white paste, often with carbon streak; sand, sherd or both temper; no slip early, thin later; mineral paint.",
-                style: TextStyle(
-                  fontFamily: 'Uber',
-                  fontSize: 18,
-                ),
               ),
               SizedBox(
                 height: 8,
               ),
               const Text(
-                "Little Colorado White Ware:",
+                "Little Colorado White Ware",
                 style: TextStyle(
-                  fontFamily: 'Uber',
                   fontSize: 18,
                   fontWeight: FontWeight.w700,
                 ),
               ),
               const Text(
                 "Darker paste color; thick white slip; sherd temper, sometimes with sand; organic paint.",
-                style: TextStyle(
-                  fontFamily: 'Uber',
-                  fontSize: 18,
-                ),
               ),
               SizedBox(height: 16),
             ],

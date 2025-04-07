@@ -104,17 +104,9 @@ class AboutKayenta extends StatelessWidget {
                   SizedBox(height: 8),
                   Text(
                     "● Distinguished from Tusayan B/W by fine cross-hatching (\"mosquito net\") drawn over other designs.",
-                    style: TextStyle(
-                      fontFamily: 'Uber',
-                      fontSize: 18,
-                    ),
                   ),
                   Text(
                     "● Massive black designs.",
-                    style: TextStyle(
-                      fontFamily: 'Uber',
-                      fontSize: 18,
-                    ),
                   ),
                 ],
               ),
