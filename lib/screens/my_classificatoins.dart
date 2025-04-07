@@ -278,8 +278,17 @@ class _MyClassificationsState extends State<MyClassifications> {
                 Expanded(
                   child: classificationHistory.isEmpty
                       ? const Center(
-                          child: Text(
-                              'There is no saved data in your device currently.'))
+                          child: Center(
+                          child: Padding(
+                            padding: const EdgeInsets.all(16.0),
+                            child: Text(
+                              'There is no saved classification data in your device.',
+                              textAlign: TextAlign.center,
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 3,
+                            ),
+                          ),
+                        ))
                       : ListView.builder(
                           itemCount: classificationHistory.length,
                           itemBuilder: (context, index) {

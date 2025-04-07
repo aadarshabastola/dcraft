@@ -33,10 +33,6 @@ class AppExpired extends StatelessWidget {
             child: Text(
               'This build of CRAFT expired on 07/15/2025.',
               textAlign: TextAlign.center,
-              style: TextStyle(
-                fontFamily: 'Uber',
-                fontSize: 15,
-              ),
             ),
           ),
           SizedBox(
@@ -47,10 +43,6 @@ class AppExpired extends StatelessWidget {
             child: Text(
               'Please contact Dr. Leszek Pawlowicz (Leszek.Pawlowicz@nau.edu) for the latest version.',
               textAlign: TextAlign.center,
-              style: TextStyle(
-                fontFamily: 'Uber',
-                fontSize: 15,
-              ),
             ),
           ),
           SizedBox(
