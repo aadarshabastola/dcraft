@@ -4,12 +4,18 @@ import 'package:dcraft/provider/theme_provider.dart';
 import 'package:dcraft/screens/app_expired.dart';
 import 'package:dcraft/screens/homepage.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:provider/provider.dart';
 import 'theme.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  await SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+  ]);
+
   await Hive.initFlutter();
   await Hive.openBox("classificationBox");
 
