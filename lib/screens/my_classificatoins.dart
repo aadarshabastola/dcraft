@@ -63,7 +63,7 @@ class _MyClassificationsState extends State<MyClassifications> {
       // Extract classifications and round them to 1 decimal place
       entry['allClassifications'].forEach((key, value) {
         newEntry[key] =
-            (value * 100).toStringAsFixed(2); // Convert to percentage and round
+            value.toStringAsFixed(2); // Convert to percentage and round
       });
 
       newEntry['Model Used'] = entry['modelUsed'];
