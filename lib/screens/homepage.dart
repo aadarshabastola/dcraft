@@ -422,6 +422,7 @@ class _HomePageState extends State<HomePage> {
         canPop: false,
         child: Scaffold(
           body: SafeArea(
+            bottom: false,
             child: SingleChildScrollView(
               child: Padding(
                 padding: const EdgeInsets.all(16),
@@ -434,7 +435,7 @@ class _HomePageState extends State<HomePage> {
                               FittedBox(
                                 fit: BoxFit.scaleDown,
                                 child: Text(
-                                  'CRAFT',
+                                  'dCRAFT',
                                   style: TextStyle(
                                       fontFamily: 'Uber',
                                       fontSize: 40,
@@ -868,6 +869,9 @@ class _HomePageState extends State<HomePage> {
                                 child: const Text('Edit Classification')),
                           )
                         : Container(),
+                    SizedBox(
+                      height: 32,
+                    ),
                   ],
                 ),
               ),

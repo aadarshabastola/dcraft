@@ -317,7 +317,7 @@ class _SettingsPageState extends State<SettingsPage> {
                                     child: const AboutCraft(),
                                     type: PageTransitionType.fade));
                           },
-                          child: const Text("About CRAFT"),
+                          child: const Text("About dCRAFT"),
                         ),
                         TextButton(
                           onPressed: _launchAboutURL,
