@@ -195,89 +195,76 @@ class _HomePageState extends State<HomePage> {
   late List<String> currentLabels = labels;
 
   void classifyImage() async {
-    await Future.delayed(Duration(milliseconds: 200));
+    await Future.delayed(Duration(milliseconds: 150));
 
     Position pos = currentPosition!;
-    const inputSize = 224;
 
+    const inputSize = 224;
+    // Resize the image
     final imageBytes = await selectedImage!.readAsBytes();
     final decodedImage = img.decodeImage(imageBytes);
     if (decodedImage == null) return;
+    final resizedImage = img.copyResize(decodedImage,
+        width: inputSize,
+        height: inputSize,
+        interpolation: img.Interpolation.average);
 
-    Map<String, double> aggregatedResults = {
-      for (var label in labels) label: 0.0,
-    };
-
-    // Rotation loop: 0°, 90°, 180°, 270°
-    for (int rotation = 0; rotation < 4; rotation++) {
-      final rotatedImage = img.copyRotate(decodedImage, rotation * 90);
-
-      final resizedImage = img.copyResize(rotatedImage,
-          width: inputSize,
-          height: inputSize,
-          interpolation: img.Interpolation.average);
-
-      final input = List.generate(
+    // Prepare the input buffer for the TFLite model
+    final input = List.generate(
         1,
         (_) => List.generate(
-          inputSize,
-          (_) => List.generate(inputSize, (_) => List<double>.filled(3, 0.0)),
-        ),
-      );
+            inputSize,
+            (_) =>
+                List.generate(inputSize, (_) => List<double>.filled(3, 0.0))));
 
-      for (int y = 0; y < inputSize; y++) {
-        for (int x = 0; x < inputSize; x++) {
-          final pixel = resizedImage.getPixel(x, y);
-          input[0][y][x][0] = img.getRed(pixel).toDouble();
-          input[0][y][x][1] = img.getGreen(pixel).toDouble();
-          input[0][y][x][2] = img.getBlue(pixel).toDouble();
-        }
-      }
-
-      final outputBuffer =
-          List.generate(1, (_) => List.filled(_outputShape[1], 0.0));
-      interpreter!.run(input, outputBuffer);
-
-      print('--- Rotation ${rotation * 90}° Results ---');
-      for (int i = 0; i < labels.length; i++) {
-        double confidence = outputBuffer[0][i];
-        aggregatedResults[labels[i]] =
-            aggregatedResults[labels[i]]! + confidence;
-        print('${labels[i]}: ${confidence.toStringAsFixed(4)}');
+    // Keep original RGB values
+    for (int y = 0; y < inputSize; y++) {
+      for (int x = 0; x < inputSize; x++) {
+        final pixel = resizedImage.getPixel(x, y);
+        input[0][y][x][0] = img.getRed(pixel).toDouble();
+        input[0][y][x][1] = img.getGreen(pixel).toDouble();
+        input[0][y][x][2] = img.getBlue(pixel).toDouble();
       }
     }
 
-    aggregatedResults.updateAll((key, value) => value / 4.0);
+    // Run the model inference
+    final outputBuffer =
+        List.generate(1, (_) => List.filled(_outputShape[1], 0.0));
+
+    interpreter!.run(input, outputBuffer);
+
+    Map<String, double> resultMap = {};
+
+    for (int i = 0; i < labels.length; i++) {
+      double confidence = outputBuffer[0][i];
+
+      resultMap[labels[i]] = confidence;
+    }
 
     if (modelProvider.selectedModel == "ConvNext (Non-Dogoszi)") {
-      aggregatedResults['Dogoszhi'] = 0.0;
+      resultMap['Dogoszhi'] = 0.0;
     }
 
     String highestConfidenceLabel = '';
     double highestConfidenceValue = 0.0;
 
-    aggregatedResults.forEach((label, value) {
+    resultMap.forEach((label, value) {
       if (value > highestConfidenceValue) {
         highestConfidenceValue = value;
         highestConfidenceLabel = label;
       }
     });
 
-    print('--- Averaged Results ---');
-    aggregatedResults.forEach((label, value) {
-      print('$label: ${value.toStringAsFixed(4)}');
-    });
-
-    print(
-        'Predicted Class: $highestConfidenceLabel (Confidence: ${highestConfidenceValue.toStringAsFixed(4)})');
-
     setState(() {
       classificatoinMap = {
         'primaryClassification': highestConfidenceLabel,
-        'allClassifications': aggregatedResults,
+        'allClassifications': resultMap,
         'latitude': pos.latitude,
         'longitude': pos.longitude,
       };
+    });
+
+    setState(() {
       currentPosition = pos;
       classificaitonData = "Classified";
     });
