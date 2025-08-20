@@ -79,7 +79,7 @@ class _HomePageState extends State<HomePage> {
         labels = regular_labels;
       }
 
-      if (modelProvider.selectedModel == "ConvNext (Non-Dogoszi)") {
+      if (modelProvider.selectedModel == "ConvNext (Non-Dogoszhi)") {
         modelPath = "assets/convnext_nd.tflite";
         labels = nd_labels;
       }
@@ -241,7 +241,7 @@ class _HomePageState extends State<HomePage> {
       resultMap[labels[i]] = confidence;
     }
 
-    if (modelProvider.selectedModel == "ConvNext (Non-Dogoszi)") {
+    if (modelProvider.selectedModel == "ConvNext (Non-Dogoszhi)") {
       resultMap['Dogoszhi'] = 0.0;
     }
 

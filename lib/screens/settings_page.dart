@@ -5,6 +5,7 @@ import 'package:dcraft/screens/about/about_craft.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -209,13 +210,13 @@ class _SettingsPageState extends State<SettingsPage> {
                     ),
                     const SizedBox(width: 16),
                     ChoiceChip(
-                      label: const Text('ConvNext (Non-Dogoszi)'),
+                      label: const Text('ConvNext (Non-Dogoszhi)'),
                       selected: modelProvider.selectedModel ==
-                          'ConvNext (Non-Dogoszi)',
+                          'ConvNext (Non-Dogoszhi)',
                       onSelected: (bool selected) {
                         if (selected) {
                           modelProvider
-                              .setSelectedModel('ConvNext (Non-Dogoszi)');
+                              .setSelectedModel('ConvNext (Non-Dogoszhi)');
                         }
                       },
                     ),
@@ -305,7 +306,20 @@ class _SettingsPageState extends State<SettingsPage> {
               Center(
                 child: Column(
                   children: [
-                    const Text('© 2024 CRAFT All rights reserved.'),
+                    FutureBuilder<PackageInfo>(
+                      future: PackageInfo.fromPlatform(),
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return const Text('Loading version...');
+                        }
+
+                        final info = snapshot.data;
+                        return Text(
+                          info != null ? 'dCRAFT v${info.version}' : 'dCRAFT',
+                        );
+                      },
+                    ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
