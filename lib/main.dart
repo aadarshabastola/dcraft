@@ -20,7 +20,7 @@ Future<void> main() async {
   await Hive.openBox("classificationBox");
 
   DateTime now = DateTime.now();
-  DateTime expirationDate = DateTime(2025, 12, 31);
+  DateTime expirationDate = DateTime(2099, 12, 30);
 
   bool isExpired = now.isAfter(expirationDate);
 
