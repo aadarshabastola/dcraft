@@ -1,6 +1,6 @@
-import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:flutter_map/flutter_map.dart';
+import 'package:latlong2/latlong.dart';
 
 class EditResults extends StatefulWidget {
   final Map<String, dynamic>? classificatoinMap;
@@ -23,18 +23,21 @@ class _EditResultsState extends State<EditResults> {
 
   late String classificationSelection = '';
 
-  final Completer<GoogleMapController> _controller =
-      Completer<GoogleMapController>();
+  final MapController _mapController = MapController();
+  late LatLng _currentCenter;
+
+  @override
+  void initState() {
+    super.initState();
+    _currentCenter = LatLng(
+      double.parse(widget.classificatoinMap!['latitude'].toString()),
+      double.parse(widget.classificatoinMap!['longitude'].toString()),
+    );
+  }
 
   void onSaveClassificatoin(Map<String, dynamic>? classificatoinMap) async {
-    final GoogleMapController controller = await _controller.future;
-
-    LatLngBounds visibleRegion = await controller.getVisibleRegion();
-    LatLng centerLatLng = LatLng(
-      (visibleRegion.northeast.latitude + visibleRegion.southwest.latitude) / 2,
-      (visibleRegion.northeast.longitude + visibleRegion.southwest.longitude) /
-          2,
-    );
+    // Use the tracked center (updated by onPositionChanged)
+    LatLng centerLatLng = _currentCenter;
 
     Map<String, dynamic>? newClassificationMap = classificatoinMap;
 
@@ -110,20 +113,21 @@ class _EditResultsState extends State<EditResults> {
                   children: [
                     ClipRRect(
                       borderRadius: BorderRadius.circular(5),
-                      child: GoogleMap(
-                        mapType: MapType.terrain,
-                        initialCameraPosition: CameraPosition(
-                            zoom: 14,
-                            target: LatLng(
-                                double.parse(widget
-                                    .classificatoinMap!['latitude']
-                                    .toString()),
-                                double.parse(widget
-                                    .classificatoinMap!['longitude']
-                                    .toString()))),
-                        onMapCreated: (GoogleMapController controller) {
-                          _controller.complete(controller);
-                        },
+                      child: FlutterMap(
+                        mapController: _mapController,
+                        options: MapOptions(
+                          initialCenter: _currentCenter,
+                          initialZoom: 14,
+                          onPositionChanged: (position, hasGesture) {
+                            _currentCenter = position.center;
+                          },
+                        ),
+                        children: [
+                          TileLayer(
+                            urlTemplate:
+                                'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+                          ),
+                        ],
                       ),
                     ),
                     Container(
@@ -158,6 +162,7 @@ class _EditResultsState extends State<EditResults> {
                 height: 16,
               ),
               Center(
+                
                   child: FilledButton(
                       onPressed: () =>
                           onSaveClassificatoin(widget.classificatoinMap),

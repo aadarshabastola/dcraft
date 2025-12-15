@@ -359,8 +359,8 @@ class _HomePageState extends State<HomePage> {
     // Add additional fields to the classification map
     classificatoinMap!['timestamp'] = DateTime.now();
     classificatoinMap!['imageLocation'] = imageLocation;
-    classificatoinMap!['latitude'] = currentPosition!.latitude;
-    classificatoinMap!['longitude'] = currentPosition!.longitude;
+    // classificatoinMap!['latitude'] = currentPosition!.latitude;
+    // classificatoinMap!['longitude'] = currentPosition!.longitude;
     classificatoinMap!['siteId'] = siteIdController.text;
 
     classificatoinMap!['modelUsed'] = modelProvider.selectedModel;
