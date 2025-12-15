@@ -1,4 +1,4 @@
-# dCraft: Tusayan White Ware Sherd Classifier
+# dCRAFT: Tusayan White Ware Sherd Classifier
 
 A specialized Flutter application for archaeological research that uses a ConvNeXt Image Classification Model to identify and classify Tusayan White Ware pottery sherds.
 
