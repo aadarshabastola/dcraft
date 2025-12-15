@@ -3,6 +3,7 @@ import 'package:dcraft/provider/model_provider.dart';
 import 'package:dcraft/provider/theme_provider.dart';
 import 'package:dcraft/screens/app_expired.dart';
 import 'package:dcraft/screens/homepage.dart';
+import 'package:dcraft/services/cached_tile_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -18,6 +19,9 @@ Future<void> main() async {
 
   await Hive.initFlutter();
   await Hive.openBox("classificationBox");
+
+  // Initialize cached tile provider for offline maps
+  await CachedTileProvider.init();
 
   DateTime now = DateTime.now();
   DateTime expirationDate = DateTime(2099, 12, 30);

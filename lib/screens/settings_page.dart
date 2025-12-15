@@ -2,6 +2,7 @@ import 'package:dcraft/provider/drive_auth_provider.dart';
 import 'package:dcraft/provider/model_provider.dart';
 import 'package:dcraft/provider/theme_provider.dart';
 import 'package:dcraft/screens/about/about_craft.dart';
+import 'package:dcraft/services/cached_tile_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -20,6 +21,45 @@ class SettingsPage extends StatefulWidget {
 class _SettingsPageState extends State<SettingsPage> {
   final Uri _url = Uri.parse(
       'https://www.ceias.nau.edu/capstone/projects/CS/2024/CRAFT_S24/');
+
+  bool _isDownloadingMaps = false;
+  DownloadProgress? _downloadProgress;
+
+  Future<void> _downloadOfflineMaps() async {
+    if (_isDownloadingMaps) return;
+
+    setState(() {
+      _isDownloadingMaps = true;
+      _downloadProgress = null;
+    });
+
+    try {
+      await for (final progress in CachedTileProvider.downloadSouthwestRegion()) {
+        if (mounted) {
+          setState(() {
+            _downloadProgress = progress;
+          });
+        }
+      }
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Offline maps downloaded successfully!')),
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Error downloading maps: $e')),
+        );
+      }
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isDownloadingMaps = false;
+        });
+      }
+    }
+  }
 
   Future<void> _launchAboutURL() async {
     if (!await launchUrl(_url)) {
@@ -105,244 +145,307 @@ class _SettingsPageState extends State<SettingsPage> {
         Provider.of<GoogleDriveAuthProvider>(context, listen: true);
     final authService = authProvider.authService;
 
-    return Scaffold(
-      appBar: AppBar(
-        // automaticallyImplyLeading: false,
-        toolbarHeight: 80,
-        title: const Padding(
-          padding: EdgeInsets.all(8.0),
-          child: Text(
-            'Settings',
-            style: TextStyle(
-                fontFamily: 'Uber', fontSize: 60, fontWeight: FontWeight.w700),
+    return PopScope(
+      canPop: _isDownloadingMaps ? false : true,
+      child: Scaffold(
+        appBar: AppBar(
+          automaticallyImplyLeading: _isDownloadingMaps ? false : true,
+          toolbarHeight: 80,
+          title: const Padding(
+            padding: EdgeInsets.all(8.0),
+            child: Text(
+              'Settings',
+              style: TextStyle(
+                  fontFamily: 'Uber', fontSize: 60, fontWeight: FontWeight.w700),
+            ),
           ),
         ),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Center(
-          child: Column(
-            children: [
-              Column(
-                children: [
-                  const SizedBox(height: 16),
-                  Icon(
-                    FontAwesomeIcons.googleDrive,
-                    size: 65,
-                    color: authService.isSignedIn ? Colors.green : null,
-                  ),
-                  const SizedBox(height: 8),
-                  Text(
-                    "Google Drive",
-                    style: TextStyle(
-                      fontFamily: 'Uber',
-                      fontSize: 24,
-                      fontWeight: FontWeight.w700,
+        body: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Center(
+            child: Column(
+              children: [
+                Column(
+                  children: [
+                    const SizedBox(height: 16),
+                    Icon(
+                      FontAwesomeIcons.googleDrive,
+                      size: 65,
                       color: authService.isSignedIn ? Colors.green : null,
                     ),
-                  ),
-                  Text(
-                    authService.isSignedIn ? "Connected" : "Not Connected",
-                    style: TextStyle(
-                      fontFamily: 'Uber',
-                      fontSize: 24,
-                      fontWeight: FontWeight.w700,
-                      color: authService.isSignedIn ? Colors.green : null,
+                    const SizedBox(height: 8),
+                    Text(
+                      "Google Drive",
+                      style: TextStyle(
+                        fontFamily: 'Uber',
+                        fontSize: 24,
+                        fontWeight: FontWeight.w700,
+                        color: authService.isSignedIn ? Colors.green : null,
+                      ),
                     ),
-                  ),
-                  if (authService.isSignedIn &&
-                      authService.userEmail?.isNotEmpty == true)
-                    Padding(
-                      padding: const EdgeInsets.only(top: 8.0),
-                      child: Text(
-                        authService.userEmail ?? '',
-                        style: const TextStyle(
+                    Text(
+                      authService.isSignedIn ? "Connected" : "Not Connected",
+                      style: TextStyle(
+                        fontFamily: 'Uber',
+                        fontSize: 24,
+                        fontWeight: FontWeight.w700,
+                        color: authService.isSignedIn ? Colors.green : null,
+                      ),
+                    ),
+                    if (authService.isSignedIn &&
+                        authService.userEmail?.isNotEmpty == true)
+                      Padding(
+                        padding: const EdgeInsets.only(top: 8.0),
+                        child: Text(
+                          authService.userEmail ?? '',
+                          style: const TextStyle(
+                            fontFamily: 'Uber',
+                            fontSize: 15,
+                          ),
+                        ),
+                      ),
+                    if (!authService.isSignedIn)
+                      const Text(
+                        "Connect to save your classifications",
+                        style: TextStyle(
                           fontFamily: 'Uber',
                           fontSize: 15,
                         ),
                       ),
-                    ),
-                  if (!authService.isSignedIn)
-                    const Text(
-                      "Connect to save your classifications",
-                      style: TextStyle(
-                        fontFamily: 'Uber',
-                        fontSize: 15,
+                    const SizedBox(height: 16),
+                    FilledButton.icon(
+                      onPressed: authService.isSignedIn
+                          ? _disconnectFromDrive
+                          : _connectToDrive,
+                      icon: Icon(
+                          authService.isSignedIn ? Icons.link_off : Icons.link),
+                      label:
+                          Text(authService.isSignedIn ? "Disconnect" : "Connect"),
+                      style: ElevatedButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 24, vertical: 12),
                       ),
                     ),
-                  const SizedBox(height: 16),
-                  FilledButton.icon(
-                    onPressed: authService.isSignedIn
-                        ? _disconnectFromDrive
-                        : _connectToDrive,
-                    icon: Icon(
-                        authService.isSignedIn ? Icons.link_off : Icons.link),
-                    label:
-                        Text(authService.isSignedIn ? "Disconnect" : "Connect"),
-                    style: ElevatedButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 24, vertical: 12),
-                    ),
+                  ],
+                ),
+                Spacer(),
+                SizedBox(
+                  height: 16,
+                ),
+                const Text(
+                  'Image Classification Model:',
+                  style: TextStyle(fontSize: 15),
+                ),
+                SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      ChoiceChip(
+                        label: const Text('ConvNexT (Base)'),
+                        selected: modelProvider.selectedModel == 'ConvNexT',
+                        onSelected: (bool selected) {
+                          if (selected) {
+                            modelProvider.setSelectedModel('ConvNexT');
+                          }
+                        },
+                      ),
+                      const SizedBox(width: 16),
+                      ChoiceChip(
+                        label: const Text('ConvNext (Non-Dogoszhi)'),
+                        selected: modelProvider.selectedModel ==
+                            'ConvNext (Non-Dogoszhi)',
+                        onSelected: (bool selected) {
+                          if (selected) {
+                            modelProvider
+                                .setSelectedModel('ConvNext (Non-Dogoszhi)');
+                          }
+                        },
+                      ),
+                    ],
                   ),
-                ],
-              ),
-              Spacer(),
-              SizedBox(
-                height: 16,
-              ),
-              const Text(
-                'Image Classification Model:',
-                style: TextStyle(fontSize: 15),
-              ),
-              SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    ChoiceChip(
-                      label: const Text('ConvNexT (Base)'),
-                      selected: modelProvider.selectedModel == 'ConvNexT',
-                      onSelected: (bool selected) {
-                        if (selected) {
-                          modelProvider.setSelectedModel('ConvNexT');
-                        }
-                      },
-                    ),
-                    const SizedBox(width: 16),
-                    ChoiceChip(
-                      label: const Text('ConvNext (Non-Dogoszhi)'),
-                      selected: modelProvider.selectedModel ==
-                          'ConvNext (Non-Dogoszhi)',
-                      onSelected: (bool selected) {
-                        if (selected) {
-                          modelProvider
-                              .setSelectedModel('ConvNext (Non-Dogoszhi)');
-                        }
-                      },
-                    ),
-                  ],
                 ),
-              ),
-              SizedBox(
-                height: 16,
-              ),
-              const Text(
-                'App Theme:',
-                style: TextStyle(fontSize: 15),
-              ),
-              SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.baseline,
-                  textBaseline: TextBaseline.alphabetic,
-                  children: [
-                    Wrap(
-                      spacing: 8.0,
-                      children: [
-                        ChoiceChip(
-                          label: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: const [
-                              Icon(Icons.light_mode, size: 18),
-                              SizedBox(width: 8),
-                              Text('Light'),
-                            ],
-                          ),
-                          selected: themeProvider.themeMode == ThemeMode.light,
-                          onSelected: (bool selected) {
-                            if (selected) {
-                              themeProvider.setTheme(ThemeMode.light);
-                            }
-                          },
-                        ),
-                        ChoiceChip(
-                          label: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: const [
-                              Icon(Icons.dark_mode, size: 18),
-                              SizedBox(width: 8),
-                              Text('Dark'),
-                            ],
-                          ),
-                          selected: themeProvider.themeMode == ThemeMode.dark,
-                          onSelected: (bool selected) {
-                            if (selected) {
-                              themeProvider.setTheme(ThemeMode.dark);
-                            }
-                          },
-                        ),
-                        ChoiceChip(
-                          label: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: const [
-                              Icon(Icons.settings, size: 18),
-                              SizedBox(width: 8),
-                              Text('System'),
-                            ],
-                          ),
-                          selected: themeProvider.themeMode == ThemeMode.system,
-                          onSelected: (bool selected) {
-                            if (selected) {
-                              themeProvider.setTheme(ThemeMode.system);
-                            }
-                          },
-                        ),
-                      ],
-                    ),
-                  ],
+                SizedBox(
+                  height: 16,
                 ),
-              ),
-              SizedBox(
-                height: 16,
-              ),
-              TextButton(
-                onPressed: clearAppData,
-                child: const Text("Having Issues? Clear App Data"),
-              ),
-              SizedBox(
-                height: 8,
-              ),
-              Center(
-                child: Column(
-                  children: [
-                    FutureBuilder<PackageInfo>(
-                      future: PackageInfo.fromPlatform(),
-                      builder: (context, snapshot) {
-                        if (snapshot.connectionState ==
-                            ConnectionState.waiting) {
-                          return const Text('Loading version...');
-                        }
-
-                        final info = snapshot.data;
-                        return Text(
-                          info != null ? 'dCRAFT v${info.version}' : 'dCRAFT',
-                        );
-                      },
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        TextButton(
-                          onPressed: () {
-                            Navigator.push(
-                                context,
-                                PageTransition(
-                                    child: const AboutCraft(),
-                                    type: PageTransitionType.fade));
-                          },
-                          child: const Text("About dCRAFT"),
-                        ),
-                        TextButton(
-                          onPressed: _launchAboutURL,
-                          child: const Text("Learn More"),
-                        ),
-                      ],
-                    ),
-                  ],
+                const Text(
+                  'App Theme:',
+                  style: TextStyle(fontSize: 15),
                 ),
-              )
-            ],
+                SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.baseline,
+                    textBaseline: TextBaseline.alphabetic,
+                    children: [
+                      Wrap(
+                        spacing: 8.0,
+                        children: [
+                          ChoiceChip(
+                            label: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: const [
+                                Icon(Icons.light_mode, size: 18),
+                                SizedBox(width: 8),
+                                Text('Light'),
+                              ],
+                            ),
+                            selected: themeProvider.themeMode == ThemeMode.light,
+                            onSelected: (bool selected) {
+                              if (selected) {
+                                themeProvider.setTheme(ThemeMode.light);
+                              }
+                            },
+                          ),
+                          ChoiceChip(
+                            label: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: const [
+                                Icon(Icons.dark_mode, size: 18),
+                                SizedBox(width: 8),
+                                Text('Dark'),
+                              ],
+                            ),
+                            selected: themeProvider.themeMode == ThemeMode.dark,
+                            onSelected: (bool selected) {
+                              if (selected) {
+                                themeProvider.setTheme(ThemeMode.dark);
+                              }
+                            },
+                          ),
+                          ChoiceChip(
+                            label: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: const [
+                                Icon(Icons.settings, size: 18),
+                                SizedBox(width: 8),
+                                Text('System'),
+                              ],
+                            ),
+                            selected: themeProvider.themeMode == ThemeMode.system,
+                            onSelected: (bool selected) {
+                              if (selected) {
+                                themeProvider.setTheme(ThemeMode.system);
+                              }
+                            },
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 24),
+                // Offline Maps Section
+                Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: Theme.of(context).colorScheme.outline,
+                    ),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Column(
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: const [
+                          Icon(Icons.map_outlined),
+                          SizedBox(width: 8),
+                          Text(
+                            'Offline Maps',
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 8),
+                      const Text(
+                        'Download map tiles for Southwest US, Colorado, and Northern Mexico for offline use.',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(fontSize: 12),
+                      ),
+                      const SizedBox(height: 12),
+                      if (_isDownloadingMaps) ...[
+                        LinearProgressIndicator(
+                          value: _downloadProgress?.progress ?? 0.0,
+                        ),
+                        const SizedBox(height: 8),
+                        Text(
+                          _downloadProgress != null
+                              ? '${(_downloadProgress!.progress * 100).toStringAsFixed(1)}% — ${_downloadProgress!.downloadedSizeMB}/${_downloadProgress!.estimatedTotalSizeMB} MB'
+                              : 'Starting...',
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          _downloadProgress != null
+                              ? '${_downloadProgress!.downloadedTiles}/${_downloadProgress!.totalTiles} tiles'
+                              : '',
+                          style: const TextStyle(fontSize: 11, color: Colors.grey),
+                        ),
+                      ] else
+                        FilledButton.icon(
+                          onPressed: _downloadOfflineMaps,
+                          icon: const Icon(Icons.download),
+                          label: const Text('Download/Reload Maps'),
+                        ),
+                    ],
+                  ),
+                ),
+                SizedBox(
+                  height: 16,
+                ),
+                // TextButton(
+                //   onPressed: clearAppData,
+                //   child: const Text("Having Issues? Clear App Data"),
+                // ),
+                // SizedBox(
+                //   height: 8,
+                // ),
+                Center(
+                  child: Column(
+                    children: [
+                      FutureBuilder<PackageInfo>(
+                        future: PackageInfo.fromPlatform(),
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            // return const Text('Loading version...');
+                          }
+      
+                          final info = snapshot.data;
+                          return Text(
+                            info != null ? 'dCRAFT v${info.version}' : 'dCRAFT',
+                          );
+                        },
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          TextButton(
+                            onPressed: () {
+                              Navigator.push(
+                                  context,
+                                  PageTransition(
+                                      child: const AboutCraft(),
+                                      type: PageTransitionType.fade));
+                            },
+                            child: const Text("About dCRAFT"),
+                          ),
+                          TextButton(
+                            onPressed: _launchAboutURL,
+                            child: const Text("Learn More"),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                )
+              ],
+            ),
           ),
         ),
       ),
