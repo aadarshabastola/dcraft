@@ -32,27 +32,33 @@ Tusayan White Ware is a significant ceramic tradition from the American Southwes
 ## 📱 Installation
 
 ### Prerequisites
-- Flutter 3.10 or higher
-- Dart 3.0 or higher
 - Android 6.0+ or iOS 12.0+
 
-### Getting Started
+### Android Installation
 
-1. **Clone the Repository**:
-   ```bash
-   git clone https://github.com/yourusername/dcraft.git
-   cd dcraft
-   ```
+1. **Download the APK**:
+   - Visit the [Releases](https://github.com/aadarshabastola/dcraft/releases) page
+   - Download the latest APK file for Android
 
-2. **Install Dependencies**:
-   ```bash
-   flutter pub get
-   ```
+2. **Install on Your Device**:
+   - Enable "Install from Unknown Sources" in your Android settings
+   - Open the downloaded APK file and follow the installation prompts
 
-3. **Run the App**:
-   ```bash
-   flutter run
-   ```
+3. **Launch the App**:
+   - Open dCraft from your app drawer and start classifying sherds
+
+### iOS Installation
+**Official Distribution**: Coming soon via TestFlight
+
+**Workaround - Manual Installation via Xcode**:
+1. Clone or download this repository
+2. Open the project in Xcode
+3. Connect your iOS device via USB
+4. In Xcode, select your device from the target device list
+5. Select **Product** → **Scheme** → **Edit Scheme**
+6. Under **Run**, change **Build Configuration** to **Release**
+7. Click **Run** (or press Cmd+R) to build and install on your device
+8. Trust the developer certificate on your device: **Settings** → **General** → **VPN & Device Management**
 
 ## 📘 Usage Guide
 
@@ -62,7 +68,15 @@ Tusayan White Ware is a significant ceramic tradition from the American Southwes
 4. **Save or Export**: Store results for later reference or export ino Google Drive
 5. **Reference**: Compare with the reference database for verification
 
-## 📂 Project Structure
+
+## 🧪 Development
+
+### Setting Up Development Environment
+1. Install Flutter by following the [official guide](https://flutter.dev/docs/get-started/install)
+2. Set up an emulator or connect a physical device
+3. Use VS Code with Flutter extensions or Android Studio with Flutter plugin
+
+### 📂 Project Structure
 
 ```
 dcraft/
@@ -79,13 +93,6 @@ dcraft/
 ├── images/             # Static images
 ```
 
-## 🧪 Development
-
-### Setting Up Development Environment
-1. Install Flutter by following the [official guide](https://flutter.dev/docs/get-started/install)
-2. Set up an emulator or connect a physical device
-3. Use VS Code with Flutter extensions or Android Studio with Flutter plugin
-
 
 ## 📄 License
 
@@ -93,4 +100,5 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 
 ## 📧 Contact
 
-- **Project Lead**: [Leszek.Pawlowicz@nau.edu]
+- **Project Lead**: [Leszek Pawlowicz](mailto:Leszek.Pawlowicz@nau.edu)
+- **Developer**: [Aadarsha Bastola](mailto:Aadarsha.Bastola@nau.edu)
