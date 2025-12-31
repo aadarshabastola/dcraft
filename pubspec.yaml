@@ -1,7 +1,7 @@
 name: dcraft
 description: "Decentralized Tusayan White Ware Classificaiton and Recording."
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
-version: 1.0.1-beta+1
+version: 1.0.2-beta+1
 
 environment:
   sdk: ^3.5.2
