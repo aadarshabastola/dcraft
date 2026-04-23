@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 
 class EditResults extends StatefulWidget {
@@ -23,7 +22,7 @@ class _EditResultsState extends State<EditResults> {
 
   late String classificationSelection = '';
 
-  final MapController _mapController = MapController();
+  // final MapController _mapController = MapController();
   late LatLng _currentCenter;
 
   @override
@@ -100,64 +99,64 @@ class _EditResultsState extends State<EditResults> {
               const SizedBox(
                 height: 32,
               ),
-              Container(
-                decoration: BoxDecoration(
-                    color: Theme.of(context)
-                        .colorScheme
-                        .secondaryContainer, // select color from current theme scheme
-                    borderRadius: const BorderRadius.all(Radius.circular(5))),
-                width: MediaQuery.of(context).size.width,
-                height: MediaQuery.of(context).size.width,
-                child: Stack(
-                  alignment: Alignment.center,
-                  children: [
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(5),
-                      child: FlutterMap(
-                        mapController: _mapController,
-                        options: MapOptions(
-                          initialCenter: _currentCenter,
-                          initialZoom: 14,
-                          onPositionChanged: (position, hasGesture) {
-                            _currentCenter = position.center;
-                          },
-                        ),
-                        children: [
-                          TileLayer(
-                            urlTemplate:
-                                'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-                          ),
-                        ],
-                      ),
-                    ),
-                    Container(
-                      decoration: BoxDecoration(
-                        color: const Color.fromARGB(140, 3, 142, 255),
-                        borderRadius: BorderRadius.circular(100),
-                        border: Border.all(
-                          width: 2,
-                          color: Colors.white,
-                        ),
-                      ),
-                      // can we change this according to the map zoom factor?
-                      height: 130,
-                      width: 130,
-                    ),
-                    Container(
-                      decoration: BoxDecoration(
-                        color: Colors.blue,
-                        borderRadius: BorderRadius.circular(100),
-                        border: Border.all(
-                          width: 2,
-                          color: Colors.white,
-                        ),
-                      ),
-                      height: 20,
-                      width: 20,
-                    ),
-                  ],
-                ),
-              ),
+              // Container(
+              //   decoration: BoxDecoration(
+              //       color: Theme.of(context)
+              //           .colorScheme
+              //           .secondaryContainer, // select color from current theme scheme
+              //       borderRadius: const BorderRadius.all(Radius.circular(5))),
+              //   width: MediaQuery.of(context).size.width,
+              //   height: MediaQuery.of(context).size.width,
+              //   child: Stack(
+              //     alignment: Alignment.center,
+              //     children: [
+              //       ClipRRect(
+              //         borderRadius: BorderRadius.circular(5),
+              //         child: FlutterMap(
+              //           mapController: _mapController,
+              //           options: MapOptions(
+              //             initialCenter: _currentCenter,
+              //             initialZoom: 14,
+              //             onPositionChanged: (position, hasGesture) {
+              //               _currentCenter = position.center;
+              //             },
+              //           ),
+              //           children: [
+              //             TileLayer(
+              //               urlTemplate:
+              //                   'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+              //             ),
+              //           ],
+              //         ),
+              //       ),
+              //       Container(
+              //         decoration: BoxDecoration(
+              //           color: const Color.fromARGB(140, 3, 142, 255),
+              //           borderRadius: BorderRadius.circular(100),
+              //           border: Border.all(
+              //             width: 2,
+              //             color: Colors.white,
+              //           ),
+              //         ),
+              //         // can we change this according to the map zoom factor?
+              //         height: 130,
+              //         width: 130,
+              //       ),
+              //       Container(
+              //         decoration: BoxDecoration(
+              //           color: Colors.blue,
+              //           borderRadius: BorderRadius.circular(100),
+              //           border: Border.all(
+              //             width: 2,
+              //             color: Colors.white,
+              //           ),
+              //         ),
+              //         height: 20,
+              //         width: 20,
+              //       ),
+              //     ],
+              //   ),
+              // ),
               const SizedBox(
                 height: 16,
               ),

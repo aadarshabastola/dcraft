@@ -31,7 +31,7 @@ Tusayan White Ware is a significant ceramic tradition from the American Southwes
 
 ## 📱 Installation
 
-### Prerequisites
+### Prerequisitest
 - Android 6.0+ or iOS 12.0+
 
 ### Android Installation

@@ -435,7 +435,7 @@ class _HomePageState extends State<HomePage> {
                               FittedBox(
                                 fit: BoxFit.scaleDown,
                                 child: Text(
-                                  'dCRAFT',
+                                  'TWW Typer',
                                   style: TextStyle(
                                       fontFamily: 'Uber',
                                       fontSize: 40,

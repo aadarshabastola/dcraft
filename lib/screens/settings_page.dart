@@ -316,7 +316,7 @@ class _SettingsPageState extends State<SettingsPage> {
 
                         final info = snapshot.data;
                         return Text(
-                          info != null ? 'dCRAFT v${info.version}' : 'dCRAFT',
+                          info != null ? 'TWW_Typer v${info.version}' : 'dCRAFT',
                         );
                       },
                     ),
@@ -331,7 +331,7 @@ class _SettingsPageState extends State<SettingsPage> {
                                     child: const AboutCraft(),
                                     type: PageTransitionType.fade));
                           },
-                          child: const Text("About dCRAFT"),
+                          child: const Text("About TWW Typer"),
                         ),
                         TextButton(
                           onPressed: _launchAboutURL,

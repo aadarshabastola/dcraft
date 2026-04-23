@@ -33,7 +33,7 @@ class AboutCraft extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    "The goal of dCRAFT (decentralized Ceramic Recording And classiFication Team) is to increase the consistency of classification streamline the process of classifying Tusayan White Ware pottery shards by archeologists, use use cutting edge ConvNeXT model for imagge classification to ensure consistency and accuracy for TWW classifications.",
+                    "The goal of TWW Typer is to increase the consistency of classification streamline the process of classifying Tusayan White Ware pottery shards by archeologists, use use cutting edge ConvNeXT model for imagge classification to ensure consistency and accuracy for TWW classifications.",
                   ),
                   SizedBox(height: 16),
                   Text(
